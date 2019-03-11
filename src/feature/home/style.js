@@ -12,4 +12,8 @@ export default {
   tab: {
     flexGrow: 1,
   },
+  container: {
+    padding: 15,
+    marginTop: 60
+  }
 }

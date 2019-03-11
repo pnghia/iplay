@@ -1,19 +1,14 @@
 import axios from 'axios';
 import config from 'config';
-import store from 'store';
 
 export default {
   token: undefined,
 
   headers: {},
 
-  setJwtToken(token = store.get('token')) {
-    if (!token) {
-      return false;
-    }
+  setJwtToken(token) {
     this.token = token;
     this.establishHeaderRequest();
-    return token;
   },
 
   establishHeaderRequest() {

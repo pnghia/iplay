@@ -1,18 +1,13 @@
+/* eslint-disable jsx-a11y/alt-text */
 import React from 'react';
 import { reduce } from 'ramda';
 import {
   Button,
   TextField,
-  Avatar,
   CssBaseline,
   FormControl,
-  FormControlLabel,
-  Checkbox,
-  Paper,
-  Typography
+  Paper
 } from '@material-ui/core';
-
-import { LockOutlined as LockOutlinedIcon } from '@material-ui/icons';
 
 import { withStyles } from '@material-ui/core/styles';
 import { useForm, useField } from 'react-final-form-hooks';
@@ -23,24 +18,25 @@ import styles from './style';
 import useLoading from '../loading/hook';
 import useAuth from '../auth/hook';
 
-function Login({ classes }) {
+function Login({ classes, history }) {
   const [loading, withLoading] = useLoading(false);
   const [, setAuth] = useAuth(false);
 
   const onSubmit = async payload => {
-    const token = await withLoading(() =>
-      http.post({ path: 'login', payload })
+    const { data: { id_token : token }} = await withLoading(() =>
+      http.post({ path: 'authenticate', payload })
     );
+    
     http.setJwtToken(token);
     setAuth(token);
+    history.push('home')
   };
 
   const schema = Joi.object().keys({
     password: Joi.string()
       .regex(/^[a-zA-Z0-9]{3,30}$/)
       .required(),
-    email: Joi.string()
-      .email({ minDomainAtoms: 2 })
+    username: Joi.number()
       .required()
   });
 
@@ -65,36 +61,27 @@ function Login({ classes }) {
     validate
   });
 
-  const email = useField('email', form);
+  const username = useField('username', form);
   const password = useField('password', form);
 
   return (
     <div className={classes.main}>
       <CssBaseline />
       <Paper className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign in
-        </Typography>
+        <img style={{width: 120}} src={`${process.env.PUBLIC_URL}/img/97pay-logo.png`} />
         <form onSubmit={handleSubmit} className={classes.form}>
           <FormControl margin="normal" required fullWidth>
-            <TextField {...email.input} label="Email" fullWidth />
-            {email.meta.touched && email.meta.error && (
-              <div className={classes.error}>{email.meta.error}</div>
+            <TextField {...username.input} label="Mobile No" fullWidth />
+            {username.meta.touched && username.meta.error && (
+              <div className={classes.error}>{username.meta.error}</div>
             )}
           </FormControl>
           <FormControl margin="normal" required fullWidth>
-            <TextField {...password.input} label="Password" fullWidth />
+            <TextField {...password.input} label="Password" type="password" fullWidth />
             {password.meta.touched && password.meta.error && (
               <div className={classes.error}>{password.meta.error}</div>
             )}
           </FormControl>
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
           {loading ? (
             <div
               style={{ display: 'flex', justifyContent: 'center', margin: 15 }}

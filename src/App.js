@@ -1,56 +1,54 @@
-/* eslint-disable react/no-array-index-key */
-import React from 'react';
+import React from "react"
 import {
   BrowserRouter as Router,
   Route,
-} from "react-router-dom";
-import Login from 'feature/login';
-import Home from 'feature/home';
-import Cart from 'feature/cart'
-import CartReview from 'feature/cartReview'
-import './App.css';
+  Redirect
+} from "react-router-dom"
+import Login from 'feature/login'
+import Home from 'feature/home'
+import http from 'service/http'
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 
-// then our route config
-const routes = [
-  {
-    path: "/login",
-    component: Login
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+        main: '#007DFE'
+      }
+    }
   },
-  {
-    path: "/home",
-    component: Home
-  },
-  {
-    path: "/cart",
-    component: Cart
-  },
-  {
-    path: "/cart-review",
-    component: CartReview
-  }
-];
+)
 
-const App = () => (
-  <Router>
-    <div>
-      {routes.map((route, i) => (
-          <RouteWithSubRoutes key={i} {...route} />
-      ))}
-    </div>
-  </Router>
-);
+function AuthExample() {
+  return (
+    <MuiThemeProvider theme={theme}>
+      <Router>
+        <div>
+          <Route path="/login" component={Login} />
+          <PrivateRoute path="/home" component={Home} />
+        </div>
+      </Router>
+    </MuiThemeProvider>
+  );
+}
 
-
-function RouteWithSubRoutes(route) {
+function PrivateRoute({ component: Component, ...rest }) {
   return (
     <Route
-      path={route.path}
-      render={props => (
-        // pass the sub-routes down to keep nesting
-        <route.component {...props} routes={route.routes} />
-      )}
+      {...rest}
+      render={props =>
+        http.token ? (
+          <Component {...props} />
+        ) : (
+          <Redirect
+            to={{
+              pathname: "/login",
+              state: { from: props.location }
+            }}
+          />
+        )
+      }
     />
   );
 }
 
-export default App;
+export default AuthExample;

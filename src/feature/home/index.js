@@ -7,127 +7,57 @@ import {
   IconButton,
   Drawer,
   Badge,
-  Tabs,
-  Tab,
-  ListItemIcon,
-  ListItemText,
-  ListItem,
-  Divider,
-  List
+  CardMedia,
+  CardContent,
+  CardActions,
+  CardActionArea,
+  Card
 } from '@material-ui/core'
 
-import MenuIcon from '@material-ui/icons/Menu'
-import {
-  ShoppingCart as ShopingCartIcon,
-  Mail as MailIcon,
-  MoveToInbox as InboxIcon
-} from '@material-ui/icons'
+import { Menu, GetApp, Notifications } from '@material-ui/icons'
 
-import { propEq, map, findIndex } from 'ramda'
+import { map } from 'ramda'
 
 import http from 'service/http'
-import Offers from 'component/offers'
-import Restaurants from 'component/restaurants'
-import TabContainer from 'component/tab'
-import useCarts from 'component/cart/hook'
+import Sidebar from 'component/drawer'
+import Bottom from 'component/bottom'
 import useLoading from '../loading/hook'
 import customStyle from './style'
-
-// import useAuth from '../auth/hook'
 
 const useStyles = makeStyles(customStyle);
 
 function home({ history }) {
   const classes = useStyles();
-  const [offers, updateOffers] = useState([]);
-  const [restaurants, updateRestaurants] = useState([]);
   const [, withLoading] = useLoading(false);
-  // const [auth] = useAuth(false)
-  const [carts, updateCarts, getCartsAmount] = useCarts();
-  const [tabSelected, updateTabSelected] = useState(0);
+
+  const [games, updateGames] = useState([
+    {
+      "id": 4,
+      "user_id": 205,
+      "game_id": 2,
+      "game_account": "01157724955",
+      "game_password": "12Aa!65tokkem",
+      "download": "http://mega333.ddns.net:8080/v2/apk/mega333.apk"
+    }
+  ]);
   const [drawer, toggleDrawer] = useState(false);
 
-  function handleChangeTab(event, newValue) {
-    updateTabSelected(newValue);
-  }
-
-  async function addToCarts (id) {
-    const withId = propEq('id', id)
-    const findIndexInCards = findIndex(withId)
-    const indexCart = findIndexInCards(carts)
-    if (indexCart === -1) {
-      const found = offers.find(item => item.id === id)
-      const newCarts = [...carts, { ...found, quantity: 1 }]
-      updateCarts(newCarts)
-      return;
-    }
-    const increaseIfExist = idOffer => item => {
-      if (item.id === idOffer) {
-        return {
-          ...item,
-          quantity: item.quantity + 1
-        }
-      }
-      return item
-    }
-    const increaseIfExistInCards = map(increaseIfExist(id))
-    const newCarts = increaseIfExistInCards(carts)
-    updateCarts(newCarts)
-  }
 
   const onToggleDrawer = status => () => {
     toggleDrawer(status);
   };
 
-  const fetchData = async () => {
-    const [
-      {
-        data: { data: offersResp }
-      },
-      {
-        data: { data: restaurantsResp }
-      }
-    ] = await withLoading(() =>
-      Promise.all([
-        http.get({ path: 'offer' }),
-        http.get({ path: 'store/search' })
-      ])
-    );
-    updateOffers(offersResp);
-    updateRestaurants(restaurantsResp);
-  };
+  // const fetchData = async () => {
+  //   const { data } = await withLoading(() =>
+  //     http.get({ path: 'users/205/sync-game' })
+  //   );
+  //   updateGames(data)
+  // };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
 
-  function SideBar() {
-    return (
-      <div className={classes.list}>
-        <List>
-          {['Feed', 'Categories', 'Orders', 'Payments'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <List>
-          {['Setting', 'Profile', 'Logout'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
-      </div>
-    );
-  }
 
   return (
     <div className={classes.root}>
@@ -138,10 +68,10 @@ function home({ history }) {
           onClick={onToggleDrawer(false)}
           onKeyDown={onToggleDrawer(false)}
         >
-          <SideBar />
+          <Sidebar history={history} />
         </div>
       </Drawer>
-      <AppBar positionFixed>
+      <AppBar>
         <Toolbar>
           <IconButton
             onClick={onToggleDrawer(true)}
@@ -149,39 +79,55 @@ function home({ history }) {
             color="inherit"
             aria-label="Menu"
           >
-            <MenuIcon />
+            <Menu />
           </IconButton>
-          <Typography variant="h6" color="inherit" className={classes.grow}>
-            Home
+          <Typography variant="h6" color="inherit" className={classes.grow} style={{textAlign: 'center', fontWeight: 'bold'}}>
+            97 IPAY
           </Typography>
           <div>
-            <IconButton color="inherit" onClick={() => history.push('cart')}>
-              <Badge badgeContent={getCartsAmount()} color="secondary">
-                <ShopingCartIcon />
-              </Badge>
+            <IconButton color="inherit">
+              <Notifications />
             </IconButton>
           </div>
         </Toolbar>
       </AppBar>
-      <AppBar positionFixed style={{top: 56}} color="default">
-        <Tabs
-          value={tabSelected}
-          onChange={handleChangeTab}
-          indicatorColor="primary"
-          textColor="primary"
-          variant="fullWidth"
-          centered
-        >
-          <Tab label="OFFER" />
-          <Tab label="RESTAURANT" />
-        </Tabs>
-      </AppBar>
-      <TabContainer>
-        { tabSelected === 0
-          ? <Offers offers={offers} addToCarts={addToCarts} />
-          : <Restaurants restaurants={restaurants} />
+      <div className={classes.container}>
+        {
+          map(({game_id: gameId, game_account: gameAccount, game_password: gamePassword, download }) => (
+            <Card className={classes.card} key={gameId}>
+              <CardActionArea>
+                <CardMedia
+                  component="img"
+                  alt="Contemplative Reptile"
+                  className={classes.media}
+                  image={`${process.env.PUBLIC_URL}/img/home/${gameId}.jpeg`}
+                  title="Contemplative Reptile"
+                />
+                <CardContent style={{textAlign: 'center'}}>
+                  <Typography gutterBottom variant="h5" component="h2" style={{fontWeight: 'bold'}}>
+                    ACE 333
+                  </Typography>
+                  <Typography component="p">
+                    <span style={{fontWeight: 'bold'}}>Username:</span> {gameAccount}
+                  </Typography>
+                  <Typography component="p">
+                    <span style={{fontWeight: 'bold'}}>Password:</span> {gamePassword}
+                  </Typography>
+                </CardContent>
+              </CardActionArea>
+              <CardActions className={classes.actions} disableActionSpacing>
+                <IconButton aria-label="Add to favorites" style={{marginLeft: 'auto'}}>
+                  <GetApp />
+                  <Typography component="label">
+                    <a style={{textDecoration: 'none'}} href={download}>Click to Download Game</a>
+                  </Typography>
+                </IconButton>
+              </CardActions>
+            </Card>
+          ), games)
         }
-      </TabContainer>
+      </div>
+      <Bottom />
     </div>
   );
 }

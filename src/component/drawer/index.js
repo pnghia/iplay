@@ -1,48 +1,90 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/styles';
+import React, { useState, useEffect } from 'react'
 import {
   List,
   Divider,
   ListItem,
   ListItemIcon,
   ListItemText
-} from '@material-ui/core';
-import { MoveToInbox, Mail } from '@material-ui/icons';
+} from '@material-ui/core'
 
-const useStyles = makeStyles({
-  list: {
-    width: 250
+import http from 'service/http'
+import { map } from 'ramda'
+import { TransferWithinAStation, Payment, Gavel, PermIdentity, Notifications, SentimentDissatisfied } from '@material-ui/icons'
+import useLoading from 'feature/loading/hook'
+
+const topSidebar = [
+  {
+    title: 'Transfer',
+    route: 'transfer',
+    icon: <TransferWithinAStation />
   },
-  fullList: {
-    width: 'auto'
+  {
+    title: 'Topup',
+    route: 'categories',
+    icon: <Payment />
+  },
+  {
+    title: 'Withdraw',
+    route: 'withdraw',
+    icon: <Gavel />
   }
-});
+]
 
-const classes = useStyles();
+const bottomSidebar = [
+  {
+    title: 'Setting',
+    route: 'setting',
+    icon: <Notifications />
+  },
+  {
+    title: 'Profile',
+    route: 'profile',
+    icon: <PermIdentity />
+  },
+  {
+    title: 'Logout',
+    route: 'orders',
+    icon: <SentimentDissatisfied />
+  }
+]
 
-function sideList() {
+function sideList({ history }) {
+  const [, withLoading] = useLoading(false);
+  const [user, updateUser] = useState({})
+  
+  const fetchData = async () => {
+    const { data } = await withLoading(() =>
+      http.get({ path: 'api/authenticate' })
+    );
+    updateUser(data);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
-    <div className={classes.list}>
+    <div>
       <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem button key={text}>
+        {map(({ title, route, icon }) => (
+          <ListItem button key={title} onClick={() => history.push(route)}>
             <ListItemIcon>
-              {index % 2 === 0 ? <MoveToInbox /> : <Mail />}
+              {icon}
             </ListItemIcon>
-            <ListItemText primary={text} />
+            <ListItemText primary={title} />
           </ListItem>
-        ))}
+        ), topSidebar)}
       </List>
       <Divider />
       <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem button key={text}>
+        {map(({ title, route, icon }) => (
+          <ListItem button key={title} onClick={() => history.push(route)}>
             <ListItemIcon>
-              {index % 2 === 0 ? <MoveToInbox /> : <Mail />}
+              {icon}
             </ListItemIcon>
-            <ListItemText primary={text} />
+            <ListItemText primary={title} />
           </ListItem>
-        ))}
+        ), bottomSidebar)}
       </List>
     </div>
   );
