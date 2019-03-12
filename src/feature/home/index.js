@@ -6,7 +6,6 @@ import {
   Toolbar,
   IconButton,
   Drawer,
-  Badge,
   CardMedia,
   CardContent,
   CardActions,
@@ -30,33 +29,23 @@ function home({ history }) {
   const classes = useStyles();
   const [, withLoading] = useLoading(false);
 
-  const [games, updateGames] = useState([
-    {
-      "id": 4,
-      "user_id": 205,
-      "game_id": 2,
-      "game_account": "01157724955",
-      "game_password": "12Aa!65tokkem",
-      "download": "http://mega333.ddns.net:8080/v2/apk/mega333.apk"
-    }
-  ]);
+  const [games, updateGames] = useState([]);
   const [drawer, toggleDrawer] = useState(false);
-
 
   const onToggleDrawer = status => () => {
     toggleDrawer(status);
   };
 
-  // const fetchData = async () => {
-  //   const { data } = await withLoading(() =>
-  //     http.get({ path: 'users/205/sync-game' })
-  //   );
-  //   updateGames(data)
-  // };
+  const fetchData = async () => {
+    const { data } = await withLoading(() =>
+      http.get({ path: 'games' })
+    );
+    updateGames(data)
+  };
 
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
+  useEffect(() => {
+    fetchData();
+  }, []);
 
 
   return (

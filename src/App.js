@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import {
   BrowserRouter as Router,
   Route,
@@ -7,6 +7,7 @@ import {
 import Login from 'feature/login'
 import Home from 'feature/home'
 import http from 'service/http'
+import store from 'store'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 
 const theme = createMuiTheme({
@@ -32,11 +33,14 @@ function AuthExample() {
 }
 
 function PrivateRoute({ component: Component, ...rest }) {
+  const token = store.get('token')
+  http.setJwtToken(token)
+
   return (
     <Route
       {...rest}
       render={props =>
-        http.token ? (
+        token ? (
           <Component {...props} />
         ) : (
           <Redirect

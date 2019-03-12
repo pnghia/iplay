@@ -14,21 +14,20 @@ import { useForm, useField } from 'react-final-form-hooks';
 import Joi from 'joi';
 import http from 'service/http';
 import { PropagateLoader } from 'react-spinners';
+import store from 'store'
 import styles from './style';
 import useLoading from '../loading/hook';
-import useAuth from '../auth/hook';
 
 function Login({ classes, history }) {
   const [loading, withLoading] = useLoading(false);
-  const [, setAuth] = useAuth(false);
 
   const onSubmit = async payload => {
     const { data: { id_token : token }} = await withLoading(() =>
       http.post({ path: 'authenticate', payload })
     );
     
-    http.setJwtToken(token);
-    setAuth(token);
+    http.setJwtToken(token)
+    store.set('token', token)
     history.push('home')
   };
 
