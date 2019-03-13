@@ -37,10 +37,13 @@ function home({ history }) {
   };
 
   const fetchData = async () => {
-    const { data } = await withLoading(() =>
-      http.get({ path: 'games' })
-    );
-    updateGames(data)
+    const [{ data: gameList }, { data: gameSynced }] = await withLoading(() => Promise.all([
+      http.get({ path: 'games' }),
+      http.get({ path: 'users/205/sync-game' })
+    ]));
+
+    const gamesInfo = gameList.map((item, index) => ({...item, ...gameSynced[index]}))
+    updateGames(gamesInfo)
   };
 
   useEffect(() => {
@@ -89,7 +92,7 @@ function home({ history }) {
                   component="img"
                   alt="Contemplative Reptile"
                   className={classes.media}
-                  image={`${process.env.PUBLIC_URL}/img/home/${gameId}.jpeg`}
+                  image={`${process.env.PUBLIC_URL}/img/home/${gameId}.png`}
                   title="Contemplative Reptile"
                 />
                 <CardContent style={{textAlign: 'center'}}>
