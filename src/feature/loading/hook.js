@@ -11,7 +11,7 @@ function useLoading(status) {
       return response
     } catch (error) {
       setLoading(false)
-      return error
+      throw error
     }
   }
   return [ loading, withLoading ];

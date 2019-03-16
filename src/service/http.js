@@ -1,5 +1,13 @@
+/* eslint-disable no-restricted-globals */
 import axios from 'axios';
-import config from 'config';
+import config from 'config'
+
+function handleErrors(response) {
+  if (response.status === 401) {
+    location.href = '/login'
+}
+return response;
+}
 
 export default {
   token: undefined,
@@ -31,7 +39,8 @@ export default {
       referrer: "no-referrer", // no-referrer, *client
       // body: JSON.stringify(payload), // body data type must match "Content-Type" header
     })
-    .then(response => response.json()); // parse 
+    .then(handleErrors)
+    .then(response => response.json())
   },
 
   put({
@@ -61,7 +70,8 @@ export default {
       referrer: "no-referrer", // no-referrer, *client
       body: JSON.stringify(payload), // body data type must match "Content-Type" header
     })
-    .then(response => response.json()); // parse 
+    .then(handleErrors)
+    .then(response => response.json())
   },
 
   postForm({

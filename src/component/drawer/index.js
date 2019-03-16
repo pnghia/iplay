@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import {
   List,
   Divider,
@@ -7,10 +7,9 @@ import {
   ListItemText
 } from '@material-ui/core'
 
-import http from 'service/http'
+import store from 'store'
 import { map } from 'ramda'
-import { TransferWithinAStation, Payment, Gavel, PermIdentity, Notifications, SentimentDissatisfied } from '@material-ui/icons'
-import useLoading from 'feature/loading/hook'
+import { TransferWithinAStation, Payment, Gavel, PermIdentity, Notifications, SentimentDissatisfied, AccountBalance } from '@material-ui/icons'
 
 const topSidebar = [
   {
@@ -49,22 +48,25 @@ const bottomSidebar = [
 ]
 
 function sideList({ history }) {
-  const [, withLoading] = useLoading(false);
-  const [user, updateUser] = useState({})
-  
-  const fetchData = async () => {
-    const { data } = await withLoading(() =>
-      http.get({ path: 'api/authenticate' })
-    );
-    updateUser(data);
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const { user_account_no: phone, user_money: balance, user_currency: currency } = store.get('user')
 
   return (
     <div>
+      <List>
+        <ListItem style={{color: '#007DFE'}}>
+          <ListItemIcon>
+            <PermIdentity />
+          </ListItemIcon>
+          <ListItemText primary={phone} />
+        </ListItem>
+        <ListItem button >
+          <ListItemIcon>
+            <AccountBalance />
+          </ListItemIcon>
+          <ListItemText primary={`${balance} ${currency}`} />
+        </ListItem>
+      </List>
+      <Divider />
       <List>
         {map(({ title, route, icon }) => (
           <ListItem button key={title} onClick={() => history.push(route)}>

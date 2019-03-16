@@ -11,6 +11,8 @@ import {
   Toolbar,
   IconButton,
   Drawer,
+  Snackbar,
+  SnackbarContent
 } from '@material-ui/core';
 
 import Sidebar from 'component/drawer'
@@ -21,24 +23,41 @@ import Joi from 'joi';
 import http from 'service/http';
 import { PropagateLoader } from 'react-spinners';
 import store from 'store'
-import { Menu } from '@material-ui/icons';
+import { Menu, Close } from '@material-ui/icons';
 import styles from './style';
 import useLoading from '../loading/hook';
 
 function Withdraw({ classes, history }) {
   const [loading, withLoading] = useLoading(false)
   const [drawer, toggleDrawer] = useState(false)
+  const [openSnackbar, setOpenSnackbar] = React.useState(false);
 
+  function handleCloseSnackbar(event, reason) {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSnackbar(false);
+  }
   const onToggleDrawer = status => () => {
     toggleDrawer(status);
   };
 
   const onSubmit = async payload => {
     try {
-      const { user_id: userId } = store.get('user')
+      const { user_id: userId, user_account_no: username } = store.get('user')
+      const submited = {
+        amount: payload.amount,
+        bank_name: payload.bankName,
+        bank_account_name: payload.bankAccountName,
+        bank_account_number: payload.bankAccountNo,
+        currency: 'MYR',
+        payment_method: 'transaction',
+        username
+      }
       await withLoading(() =>
-        http.post({ path: `users/${userId}/deposit`, payload })
+        http.post({ path: `users/${userId}/withdraw`, payload: submited })
       );
+      setOpenSnackbar(true);
     } catch (error) {
       throw error
     }
@@ -80,6 +99,33 @@ function Withdraw({ classes, history }) {
   const bankAccountName = useField('bankAccountName', form)
   const bankAccountNo = useField('bankAccountNo', form)
   const amount = useField('amount', form);
+
+  function MySnackbarContentWrapper(props) {
+    const { className, message, onClose, variant, ...other } = props;
+    return (
+      <SnackbarContent
+        style={{backgroundColor: '#007DFE'}}
+        aria-describedby="client-snackbar"
+        message={
+          <span id="client-snackbar" className={classes.message}>
+            {message}
+          </span>
+        }
+        action={[
+          <IconButton
+            key="close"
+            aria-label="Close"
+            color="inherit"
+            className={classes.close}
+            onClick={onClose}
+          >
+            <Close className={classes.icon} />
+          </IconButton>,
+        ]}
+        {...other}
+      />
+    );
+  }
 
   return (
     <div className={classes.root}>
@@ -162,6 +208,22 @@ function Withdraw({ classes, history }) {
           </form>
         </div>
       <Bottom history={history} />
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+          backgroundColor: '#007DFE'
+        }}
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <MySnackbarContentWrapper
+          onClose={handleCloseSnackbar}
+          variant="success"
+          message="Your request submitted successfully"
+        />
+      </Snackbar>
     </div>
   );
 }

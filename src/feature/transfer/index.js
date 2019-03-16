@@ -10,12 +10,15 @@ import {
   MenuItem,
   Select,
   FormControlLabel,
-  Checkbox,
+  FormLabel,
   Typography,
   AppBar,
   Toolbar,
   IconButton,
   Drawer,
+  RadioGroup,
+  Radio,
+  Snackbar
 } from '@material-ui/core';
 
 import Sidebar from 'component/drawer'
@@ -26,15 +29,24 @@ import Joi from 'joi';
 import http from 'service/http';
 import { PropagateLoader } from 'react-spinners';
 import store from 'store'
-import { Menu } from '@material-ui/icons';
+import { Menu, Close as CloseIcon } from '@material-ui/icons';
 import styles from './style';
 import useLoading from '../loading/hook';
 
 function Deposit({ classes, history }) {
   const [loading, withLoading] = useLoading(false);
-  const [openFrom, setOpenFrom] = React.useState(false);
-  const [openTo, setOpenTo] = React.useState(false);
+  const [openGameSelector, setOpenGameSelector] = useState(false);
+  const [msgTrans, setMsgTrans] = useState('');
   const [drawer, toggleDrawer] = useState(false);
+  const [openSnackbarError, setOpenSnackbarError] = React.useState(false);
+
+  function handleCloseSnackbarError(event, reason) {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpenSnackbarError(false);
+  }
 
   const onToggleDrawer = status => () => {
     toggleDrawer(status);
@@ -43,16 +55,29 @@ function Deposit({ classes, history }) {
   const onSubmit = async payload => {
     try {
       const { user_id: userId } = store.get('user')
-      await withLoading(() =>
-        http.post({ path: `users/${userId}/deposit`, payload })
-      );
+      const path = payload.transferType === 'in' ? `/users/${userId}/game/${payload.game}/deposit` : `/users/${userId}/game/${payload.game}/withdraw`
+      const { statusCode, message } = await withLoading(() =>
+        http.post({ path, payload: {
+          amount: payload.amount
+        } })
+      )
+      
+      if(statusCode && statusCode !== 200) {
+        setMsgTrans(message.msg)
+        setOpenSnackbarError(true)
+        return
+      }
+      setMsgTrans('Transfer is successfully finished')
+      setOpenSnackbarError(true)
     } catch (error) {
-      throw error
+      setOpenSnackbarError(true);
     }
   };
 
   const schema = Joi.object().keys({
-    bank: Joi.string()
+    transferType: Joi.string()
+      .required(),
+    game: Joi.string()
       .required(),
     amount: Joi.number()
       .required()
@@ -76,26 +101,22 @@ function Deposit({ classes, history }) {
 
   const { form, handleSubmit, submitting } = useForm({
     onSubmit,
-    validate
+    validate,
+    initialValues: {
+      transferType: 'in'
+    }
   });
 
-  function handleCloseFrom() {
-    setOpenFrom(false);
+  function handleCloseGameSelector() {
+    setOpenGameSelector(false);
   }
 
-  function handleOpenFrom() {
-    setOpenFrom(true);
+  function handleOpenGameSelector() {
+    setOpenGameSelector(true);
   }
 
-  function handleCloseTo() {
-    setOpenTo(false);
-  }
-
-  function handleOpenTo() {
-    setOpenTo(true);
-  }
-
-  const bank = useField('bank', form);
+  const transferType = useField('transferType', form);
+  const game = useField('game', form);
   const amount = useField('amount', form);
 
   return (
@@ -130,47 +151,32 @@ function Deposit({ classes, history }) {
           {/* <img style={{width: 120}} src={`${process.env.PUBLIC_URL}/img/97pay-logo.png`} /> */}
           <form onSubmit={handleSubmit} className={classes.form}>
             <FormControl margin="normal" required fullWidth>
-              <InputLabel htmlFor="demo-controlled-open-select">From</InputLabel>
-              <Select
-                open={openFrom}
-                onClose={handleCloseFrom}
-                onOpen={handleOpenFrom}
-                {...bank.input}
-                inputProps={{
-                  name: 'bank',
-                  id: 'demo-controlled-open-select',
-                }}
+              <FormLabel component="legend">Transfer type</FormLabel>
+              <RadioGroup
+                aria-label="transfer"
+                name="transfer"
+                {...transferType.input}
               >
-              <MenuItem value='CIMB'>CIMB Bank</MenuItem>
-              <MenuItem value='HLB'>Hong Leong Bank</MenuItem>
-              <MenuItem value='MBB'>Maybank Berhad</MenuItem>
-              <MenuItem value='PBB'>Public Bank</MenuItem>
-              <MenuItem value='RHB'>RHB</MenuItem>
-            </Select>
-            {bank.meta.touched && bank.meta.error && (
-              <div className={classes.error}>{bank.meta.error}</div>
-            )}
+                <FormControlLabel value='in' control={<Radio />} label="Transfer In" />
+                <FormControlLabel value='out' control={<Radio />} label="Transfer Out" />
+              </RadioGroup>
           </FormControl>
           <FormControl margin="normal" required fullWidth>
-              <InputLabel htmlFor="demo-controlled-open-select">To</InputLabel>
+              <InputLabel htmlFor="demo-controlled-open-select">Select Games</InputLabel>
               <Select
-                open={openTo}
-                onClose={handleCloseTo}
-                onOpen={handleOpenTo}
-                {...bank.input}
+                open={openGameSelector}
+                onClose={handleCloseGameSelector}
+                onOpen={handleOpenGameSelector}
+                {...game.input}
                 inputProps={{
-                  name: 'bank',
+                  name: 'game',
                   id: 'demo-controlled-open-select',
                 }}
               >
-              <MenuItem value='CIMB'>CIMB Bank</MenuItem>
-              <MenuItem value='HLB'>Hong Leong Bank</MenuItem>
-              <MenuItem value='MBB'>Maybank Berhad</MenuItem>
-              <MenuItem value='PBB'>Public Bank</MenuItem>
-              <MenuItem value='RHB'>RHB</MenuItem>
+              <MenuItem value='2'>918 kiss</MenuItem>
             </Select>
-            {bank.meta.touched && bank.meta.error && (
-              <div className={classes.error}>{bank.meta.error}</div>
+            {game.meta.touched && game.meta.error && (
+              <div className={classes.error}>{game.meta.error}</div>
             )}
           </FormControl>
           <FormControl margin="normal" required fullWidth>
@@ -205,6 +211,30 @@ function Deposit({ classes, history }) {
         </form>
       </div>
       <Bottom history={history} />
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        open={openSnackbarError}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbarError}
+        ContentProps={{
+          'aria-describedby': 'message-id',
+        }}
+        message={<span id="message-id">{msgTrans}</span>}
+        action={[
+          <IconButton
+            key="close"
+            aria-label="Close"
+            color="inherit"
+            className={classes.close}
+            onClick={handleCloseSnackbarError}
+          >
+            <CloseIcon />
+          </IconButton>,
+        ]}
+      />
     </div>
   );
 }

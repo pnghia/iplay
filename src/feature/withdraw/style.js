@@ -35,6 +35,9 @@ const styles = theme => ({
   submit: {
     marginTop: theme.spacing.unit * 3,
   },
+  success: {
+    backgroundColor: '#007DFE',
+  },
 });
 
 export default styles;
