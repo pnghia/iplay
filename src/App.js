@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React from "react"
 import {
   BrowserRouter as Router,
   Route,
@@ -6,6 +6,9 @@ import {
 } from "react-router-dom"
 import Login from 'feature/login'
 import Home from 'feature/home'
+import Deposit from 'feature/deposit'
+import Withdraw from 'feature/withdraw'
+import Transfer from 'feature/transfer'
 import http from 'service/http'
 import store from 'store'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
@@ -26,6 +29,10 @@ function AuthExample() {
         <div>
           <Route path="/login" component={Login} />
           <PrivateRoute path="/home" component={Home} />
+          <PrivateRoute path="/deposit" component={Deposit} />
+          <PrivateRoute path="/withdraw" component={Withdraw} />
+          <PrivateRoute path="/transfer" component={Transfer} />
+          <PrivateRoute exact path="/" component={Home} />
         </div>
       </Router>
     </MuiThemeProvider>

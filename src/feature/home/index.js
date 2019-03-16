@@ -37,12 +37,19 @@ function home({ history }) {
   };
 
   const fetchData = async () => {
-    const [{ data: gameList }, { data: gameSynced }] = await withLoading(() => Promise.all([
+    const [gameList, gameSynced ] = await withLoading(() => Promise.all([
       http.get({ path: 'games' }),
-      http.get({ path: 'users/205/sync-game' })
+      http.post({ path: 'users/205/sync-game' })
     ]));
 
-    const gamesInfo = gameList.map((item, index) => ({...item, ...gameSynced[index]}))
+    const gamesInfo = gameSynced.map(item => {
+      const found = gameList.find(({ id }) => id === item.game_id )
+      return {
+        ...item,
+        name: found.name,
+        game_ui_url: found.game_ui_url
+      }
+    })
     updateGames(gamesInfo)
   };
 
@@ -85,7 +92,7 @@ function home({ history }) {
       </AppBar>
       <div className={classes.container}>
         {
-          map(({game_id: gameId, game_account: gameAccount, game_password: gamePassword, download }) => (
+          map(({game_id: gameId, game_account: gameAccount, game_password: gamePassword, game_ui_url: download, name }) => (
             <Card className={classes.card} key={gameId}>
               <CardActionArea>
                 <CardMedia
@@ -97,7 +104,7 @@ function home({ history }) {
                 />
                 <CardContent style={{textAlign: 'center'}}>
                   <Typography gutterBottom variant="h5" component="h2" style={{fontWeight: 'bold'}}>
-                    ACE 333
+                    {name}
                   </Typography>
                   <Typography component="p">
                     <span style={{fontWeight: 'bold'}}>Username:</span> {gameAccount}
@@ -119,7 +126,7 @@ function home({ history }) {
           ), games)
         }
       </div>
-      <Bottom />
+      <Bottom history={history} />
     </div>
   );
 }

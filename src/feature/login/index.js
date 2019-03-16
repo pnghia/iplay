@@ -22,13 +22,18 @@ function Login({ classes, history }) {
   const [loading, withLoading] = useLoading(false);
 
   const onSubmit = async payload => {
-    const { data: { id_token : token }} = await withLoading(() =>
-      http.post({ path: 'authenticate', payload })
-    );
-    
-    http.setJwtToken(token)
-    store.set('token', token)
-    history.push('home')
+    try {
+      const { id_token: token, user } = await withLoading(() =>
+        http.post({ path: 'authenticate', payload })
+      );
+      
+      http.setJwtToken(token)
+      store.set('token', token)
+      store.set('user', user)
+      history.push('home')
+    } catch (error) {
+      throw error
+    }
   };
 
   const schema = Joi.object().keys({

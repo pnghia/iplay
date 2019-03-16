@@ -20,7 +20,7 @@ const topSidebar = [
   },
   {
     title: 'Topup',
-    route: 'categories',
+    route: 'deposit',
     icon: <Payment />
   },
   {

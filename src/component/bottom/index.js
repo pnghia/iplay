@@ -14,7 +14,7 @@ const useStyles = makeStyles({
   },
 });
 
-function SimpleBottomNavigation() {
+function SimpleBottomNavigation({ history }) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
@@ -22,15 +22,16 @@ function SimpleBottomNavigation() {
     <BottomNavigation
       value={value}
       onChange={(event, newValue) => {
-        setValue(newValue);
+        setValue(newValue)
+        history.push(newValue)
       }}
       showLabels
       className={classes.root}
     >
-      <BottomNavigationAction label="Home" icon={<Dashboard />} />
-      <BottomNavigationAction label="Transfer" icon={<Sync/>} />
-      <BottomNavigationAction label="Topup" icon={<Payment />} />
-      <BottomNavigationAction label="Withdraw" icon={<Gavel />} />
+      <BottomNavigationAction value='home' label="Home" icon={<Dashboard />} />
+      <BottomNavigationAction value='transfer' label="Transfer" icon={<Sync/>} />
+      <BottomNavigationAction value='deposit' label="Topup" icon={<Payment />} />
+      <BottomNavigationAction value='withdraw' label="Withdraw" icon={<Gavel />} />
     </BottomNavigation>
   );
 }
