@@ -80,6 +80,7 @@ function Deposit({ classes, history }) {
     game: Joi.string()
       .required(),
     amount: Joi.number()
+      .min(50)
       .required()
   });
 
