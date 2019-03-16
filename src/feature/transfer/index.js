@@ -63,7 +63,7 @@ function Deposit({ classes, history }) {
       )
       
       if(statusCode && statusCode !== 200) {
-        setMsgTrans(message.msg)
+        setMsgTrans(message.length ? message : message.msg)
         setOpenSnackbarError(true)
         return
       }
