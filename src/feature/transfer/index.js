@@ -29,7 +29,7 @@ import Joi from 'joi';
 import http from 'service/http';
 import { PropagateLoader } from 'react-spinners';
 import store from 'store'
-import { Menu, Close as CloseIcon } from '@material-ui/icons';
+import { Menu, Close as CloseIcon, Notifications } from '@material-ui/icons';
 import styles from './style';
 import useLoading from '../loading/hook';
 
@@ -142,9 +142,14 @@ function Deposit({ classes, history }) {
           >
             <Menu />
           </IconButton>
-          <Typography variant="body1" color="inherit" className={classes.grow} style={{textAlign: 'center', fontWeight: 'bold'}}>
+          <Typography variant="title" color="inherit" className={classes.header} style={{textAlign: 'center', fontWeight: 'bold'}}>
             Transfer
           </Typography>
+          <div>
+            <IconButton color="inherit">
+              <Notifications />
+            </IconButton>
+          </div>
         </Toolbar>
       </AppBar>
       <div className={classes.container}>
@@ -158,8 +163,8 @@ function Deposit({ classes, history }) {
                 name="transfer"
                 {...transferType.input}
               >
-                <FormControlLabel value='in' control={<Radio />} label="Transfer In" />
-                <FormControlLabel value='out' control={<Radio />} label="Transfer Out" />
+                <FormControlLabel value='in' control={<Radio color="primary" />} label="Transfer In" />
+                <FormControlLabel value='out' control={<Radio color="primary" />} label="Transfer Out" />
               </RadioGroup>
           </FormControl>
           <FormControl margin="normal" required fullWidth>
@@ -206,7 +211,7 @@ function Deposit({ classes, history }) {
               disabled={submitting}
               className={classes.submit}
             >
-              SUBMIT
+              TRANSFER NOW
             </Button>
           )}
         </form>

@@ -34,7 +34,12 @@ const styles = theme => ({
   },
   submit: {
     marginTop: theme.spacing.unit * 3,
+    fontWeight: 'bold'
   },
+  header: {
+    fontFamily: 'AIFont',
+    flexGrow: 1,
+  }
 });
 
 export default styles;

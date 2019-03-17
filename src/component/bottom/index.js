@@ -10,7 +10,8 @@ const useStyles = makeStyles({
     position: 'fixed',
     top: 'auto',
     bottom: 0,
-    borderTop: '1px solid #ccc'
+    borderTop: '1px solid #ccc',
+    backgroundColor: '#007DFE',
   },
 });
 
@@ -28,10 +29,10 @@ function SimpleBottomNavigation({ history }) {
       showLabels
       className={classes.root}
     >
-      <BottomNavigationAction value='home' label="Home" icon={<Dashboard />} />
-      <BottomNavigationAction value='transfer' label="Transfer" icon={<Sync/>} />
-      <BottomNavigationAction value='deposit' label="Topup" icon={<Payment />} />
-      <BottomNavigationAction value='withdraw' label="Withdraw" icon={<Gavel />} />
+      <BottomNavigationAction style={{color: 'white'}} value='home' label="Home" icon={<Dashboard />} />
+      <BottomNavigationAction style={{color: 'white'}} value='transfer' label="Transfer" icon={<Sync/>} />
+      <BottomNavigationAction style={{color: 'white'}} value='deposit' label="Topup" icon={<Payment />} />
+      <BottomNavigationAction style={{color: 'white'}} value='withdraw' label="Withdraw" icon={<Gavel />} />
     </BottomNavigation>
   );
 }

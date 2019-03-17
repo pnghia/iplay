@@ -14,6 +14,16 @@ import store from 'store'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 
 const theme = createMuiTheme({
+  typography: {
+    // Use the system font instead of the default Roboto font.
+    fontFamily: [
+      '"Source Sans Pro"',
+      '"Helvetica Neue"',
+      'Helvetica',
+      'Arial',
+      'sans-serif'
+    ].join(','),
+  },
   palette: {
     primary: {
         main: '#007DFE'

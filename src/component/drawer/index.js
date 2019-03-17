@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 import React from 'react'
 import {
   List,
@@ -51,7 +52,8 @@ function sideList({ history }) {
   const { user_account_no: phone, user_money: balance, user_currency: currency } = store.get('user')
 
   return (
-    <div>
+    <div style={{ textAlign: 'center' }}>
+      <img style={{width: 120, marginTop: 25}} src={`${process.env.PUBLIC_URL}/img/97pay-logo.png`} />
       <List>
         <ListItem style={{color: '#007DFE'}}>
           <ListItemIcon>

@@ -23,7 +23,7 @@ import Joi from 'joi';
 import http from 'service/http';
 import { PropagateLoader } from 'react-spinners';
 import store from 'store'
-import { Menu, Close } from '@material-ui/icons';
+import { Menu, Close, Notifications } from '@material-ui/icons';
 import styles from './style';
 import useLoading from '../loading/hook';
 
@@ -65,10 +65,13 @@ function Withdraw({ classes, history }) {
 
   const schema = Joi.object().keys({
     bankName: Joi.string()
+      .label('Bank Name')
       .required(),
     bankAccountName: Joi.string()
+      .label('Bank Account Name')
       .required(),
     bankAccountNo: Joi.string()
+      .label('Bank Account Number')
       .required(),
     amount: Joi.number()
       .required()
@@ -149,9 +152,14 @@ function Withdraw({ classes, history }) {
           >
             <Menu />
           </IconButton>
-          <Typography variant="body1" color="inherit" className={classes.grow} style={{textAlign: 'center', fontWeight: 'bold'}}>
+          <Typography variant="title" color="inherit" className={classes.header} style={{textAlign: 'center', fontWeight: 'bold'}}>
             Withdraw
           </Typography>
+          <div>
+            <IconButton color="inherit">
+              <Notifications />
+            </IconButton>
+          </div>
         </Toolbar>
       </AppBar>
       <div className={classes.container}>
@@ -159,25 +167,25 @@ function Withdraw({ classes, history }) {
           {/* <img style={{width: 120}} src={`${process.env.PUBLIC_URL}/img/97pay-logo.png`} /> */}
           <form onSubmit={handleSubmit} className={classes.form}>
             <FormControl margin="normal" required fullWidth>
-              <TextField {...bankName.input} label="Bank name" fullWidth />
+              <TextField {...bankName.input} label="Please Enter Bank Name (full)" fullWidth />
               {bankName.meta.touched && bankName.meta.error && (
                 <div className={classes.error}>{bankName.meta.error}</div>
               )}
             </FormControl>
             <FormControl margin="normal" required fullWidth>
-              <TextField {...bankAccountName.input} label="Bank account name" fullWidth />
+              <TextField {...bankAccountName.input} label="Please Enter Bank Account Name" fullWidth />
               {bankAccountName.meta.touched && bankAccountName.meta.error && (
                 <div className={classes.error}>{bankAccountName.meta.error}</div>
               )}
             </FormControl>
             <FormControl margin="normal" required fullWidth>
-              <TextField {...bankAccountNo.input} label="Bank account number" fullWidth />
+              <TextField {...bankAccountNo.input} label="Please Enter Bank Account No" fullWidth />
               {bankAccountNo.meta.touched && bankAccountNo.meta.error && (
                 <div className={classes.error}>{bankAccountNo.meta.error}</div>
               )}
             </FormControl>
             <FormControl margin="normal" required fullWidth>
-              <TextField {...amount.input} label="Amount" fullWidth />
+              <TextField {...amount.input} label="Please Enter Withdraw Amount" fullWidth />
               {amount.meta.touched && amount.meta.error && (
                 <div className={classes.error}>{amount.meta.error}</div>
               )}
@@ -202,7 +210,9 @@ function Withdraw({ classes, history }) {
                 disabled={submitting}
                 className={classes.submit}
               >
-                WITHDRAW
+                <Typography variant="button" color="inherit" className={classes.button}>
+                  WITHDRAW NOW
+                </Typography>
               </Button>
             )}
           </form>

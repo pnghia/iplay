@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { makeStyles } from '@material-ui/styles'
+import { withStyles } from '@material-ui/core/styles';
 import {
   Typography,
   AppBar,
@@ -21,12 +21,9 @@ import http from 'service/http'
 import Sidebar from 'component/drawer'
 import Bottom from 'component/bottom'
 import useLoading from '../loading/hook'
-import customStyle from './style'
+import styles from './style';
 
-const useStyles = makeStyles(customStyle);
-
-function home({ history }) {
-  const classes = useStyles();
+function home({ history, classes }) {
   const [, withLoading] = useLoading(false);
 
   const [games, updateGames] = useState([]);
@@ -80,8 +77,8 @@ function home({ history }) {
           >
             <Menu />
           </IconButton>
-          <Typography variant="h6" color="inherit" className={classes.grow} style={{textAlign: 'center', fontWeight: 'bold'}}>
-            97 IPAY
+          <Typography variant="title" color="inherit" className={classes.header} style={{textAlign: 'center', fontWeight: 'bold'}}>
+            Home
           </Typography>
           <div>
             <IconButton color="inherit">
@@ -130,5 +127,4 @@ function home({ history }) {
     </div>
   );
 }
-
-export default home;
+export default withStyles(styles)(home);

@@ -1,4 +1,4 @@
-export default {
+const styles = () => ({
   root: {
     flexGrow: 1,
   },
@@ -15,5 +15,11 @@ export default {
   container: {
     padding: 15,
     marginTop: 60
+  },
+  header: {
+    fontFamily: 'AIFont',
+    flexGrow: 1,
   }
-}
+})
+
+export default styles;
