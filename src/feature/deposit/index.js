@@ -1,5 +1,6 @@
+/* eslint-disable camelcase */
 /* eslint-disable jsx-a11y/alt-text */
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { reduce } from 'ramda';
 import {
   Button,
@@ -26,7 +27,7 @@ import Joi from 'joi';
 import http from 'service/http';
 import { PropagateLoader } from 'react-spinners';
 import store from 'store'
-import { Menu } from '@material-ui/icons';
+import { Menu, Notifications } from '@material-ui/icons';
 import styles from './style';
 import useLoading from '../loading/hook';
 
@@ -34,24 +35,46 @@ function Deposit({ classes, history }) {
   const [loading, withLoading] = useLoading(false);
   const [open, setOpen] = React.useState(false);
   const [drawer, toggleDrawer] = useState(false);
-
+  const formPayment = useRef(null);
   const onToggleDrawer = status => () => {
     toggleDrawer(status);
   };
 
-  const onSubmit = async payload => {
+  const [backendUrl, setBackendUrl]  = useState()
+  const [currency, setCurrency] = useState();
+  const [memberId, setMemberId] = useState();
+  const [memberIp, setMemberIp] = useState();
+  const [partnerCode, setPartnerCode] = useState();
+  const [partnerOrderid, setPartnerOrderid] = useState();
+  const [redirectUrl, setRedirectUrl] = useState();
+  const [serviceVersion, setServiceVersion] = useState();
+  const [sign, setSign] = useState();
+  const [transTime, setTransTime] = useState();
+
+  const onSubmit = async ({ bankCode, amount }) => {
     try {
       const { user_id: userId } = store.get('user')
-      await withLoading(() =>
-        http.post({ path: `users/${userId}/deposit`, payload })
+      const payload = await withLoading(() =>
+        http.get({ path: `api/payment/${userId}/sign?bankCode=${bankCode}&amount=${amount}` })
       );
+      setBackendUrl(payload.backend_url)
+      setCurrency(payload.currency)
+      setMemberId(payload.member_id)
+      setMemberIp(payload.member_ip)
+      setPartnerCode(payload.partner_code)
+      setPartnerOrderid(payload.partner_orderid)
+      setRedirectUrl(payload.redirect_url)
+      setServiceVersion(payload.service_version)
+      setSign(payload.sign)
+      setTransTime(payload.trans_time)
+      formPayment.current.submit();
     } catch (error) {
       throw error
     }
   };
 
   const schema = Joi.object().keys({
-    bank: Joi.string()
+    bankCode: Joi.string()
       .required(),
     amount: Joi.number()
       .required()
@@ -86,7 +109,7 @@ function Deposit({ classes, history }) {
     setOpen(true);
   }
 
-  const bank = useField('bank', form);
+  const bankCode = useField('bankCode', form);
   const amount = useField('amount', form);
 
   return (
@@ -111,9 +134,14 @@ function Deposit({ classes, history }) {
           >
             <Menu />
           </IconButton>
-          <Typography variant="body1" color="inherit" className={classes.grow} style={{textAlign: 'center', fontWeight: 'bold'}}>
+          <Typography variant="title" color="inherit" className={classes.header} style={{textAlign: 'center', fontWeight: 'bold'}}>
             Top up
           </Typography>
+          <div>
+            <IconButton color="inherit">
+              <Notifications />
+            </IconButton>
+          </div>
         </Toolbar>
       </AppBar>
       <div className={classes.container}>
@@ -126,9 +154,9 @@ function Deposit({ classes, history }) {
                 open={open}
                 onClose={handleClose}
                 onOpen={handleOpen}
-                {...bank.input}
+                {...bankCode.input}
                 inputProps={{
-                  name: 'bank',
+                  name: 'bankCode',
                   id: 'demo-controlled-open-select',
                 }}
               >
@@ -138,8 +166,8 @@ function Deposit({ classes, history }) {
               <MenuItem value='PBB'>Public Bank</MenuItem>
               <MenuItem value='RHB'>RHB</MenuItem>
             </Select>
-            {bank.meta.touched && bank.meta.error && (
-              <div className={classes.error}>{bank.meta.error}</div>
+            {bankCode.meta.touched && bankCode.meta.error && (
+              <div className={classes.error}>{bankCode.meta.error}</div>
             )}
           </FormControl>
           <FormControl margin="normal" required fullWidth>
@@ -171,13 +199,27 @@ function Deposit({ classes, history }) {
               color="primary"
               disabled={submitting}
               className={classes.submit}
-            >
-              SUBMIT
+            >TOP UP NOW
             </Button>
           )}
         </form>
       </div>
       <Bottom history={history} />
+      <form style={{display: 'none'}} action='https://www.gzshop318.com/fundtransfer.php' ref={formPayment} method='POST'>
+        <input type="text" {...amount.input} name="amount" />
+        <input type="text" value={backendUrl} name="backend_url" />
+        <input type="text" {...bankCode.input} name="bank_code" />
+        <input type="text" value={currency} name="currency" />
+        <input type="text" value={memberId} name="member_id" />
+        <input type="text" value={memberIp} name="member_ip" />
+        <input type="text" value={partnerCode} name="partner_code"/>
+        <input type="text" value={partnerOrderid} name="partner_orderid"/>
+        <input type="text" value={redirectUrl} name="redirect_url"/>
+        <input type="text" name="remark" value="" />
+        <input type="text" value={serviceVersion} name="service_version" />
+        <input type="text" value={sign} name="sign" />
+        <input type="text" value={transTime} name="trans_time" />
+      </form>
     </div>
   );
 }

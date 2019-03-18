@@ -11,7 +11,7 @@ const styles = theme => ({
     },
   },
   container: {
-    marginTop: 66,
+    marginTop: 56,
   },
   error: {
     color: theme.palette.secondary.main
@@ -28,7 +28,7 @@ const styles = theme => ({
     backgroundColor: theme.palette.secondary.main,
   },
   form: {
-    padding: 15,
+    padding: 25,
     width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing.unit,
   },

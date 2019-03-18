@@ -40,11 +40,6 @@ const bottomSidebar = [
     title: 'Profile',
     route: 'profile',
     icon: <PermIdentity />
-  },
-  {
-    title: 'Logout',
-    route: 'orders',
-    icon: <SentimentDissatisfied />
   }
 ]
 
@@ -89,6 +84,12 @@ function sideList({ history }) {
             <ListItemText primary={title} />
           </ListItem>
         ), bottomSidebar)}
+        <ListItem button onClick={() => { history.push('login'); store.clearAll()}}>
+            <ListItemIcon>
+              <SentimentDissatisfied />
+            </ListItemIcon>
+            <ListItemText primary='Logout' />
+          </ListItem>
       </List>
     </div>
   );
