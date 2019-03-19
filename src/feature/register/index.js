@@ -19,11 +19,16 @@ import useLoading from '../loading/hook';
 
 function Login({ classes, history }) {
   const [loading, withLoading] = useLoading(false);
-  const toRegister = () => history.push('register')
-  const onSubmit = async payload => {
+  const toLogin = () => history.push('login')
+  const onSubmit = async ({ email, password, fullname, phone }) => {
     try {
+      const payload = {
+        email, password, fullname,
+        mobile_phone: phone,
+        user_account_no: phone
+      }
       const { id_token: token, user } = await withLoading(() =>
-        http.post({ path: 'authenticate', payload })
+        http.post({ path: 'users', payload })
       );
       
       http.setJwtToken(token)
@@ -36,11 +41,15 @@ function Login({ classes, history }) {
   };
 
   const schema = Joi.object().keys({
+    fullname: Joi.string()
+      .required(),
+    phone: Joi.number()
+      .required(),
+    email: Joi.string().email({ minDomainAtoms: 2 }),
     password: Joi.string()
       .regex(/^[a-zA-Z0-9]{3,30}$/)
       .required(),
-    username: Joi.number()
-      .required()
+    confirmPassword: Joi.string().valid(Joi.ref('password')).required()
   });
 
   const validate = values => {
@@ -64,8 +73,11 @@ function Login({ classes, history }) {
     validate
   });
 
-  const username = useField('username', form);
+  const phone = useField('phone', form);
   const password = useField('password', form);
+  const fullname = useField('fullname', form);
+  const email = useField('email', form);
+  const confirmPassword = useField('confirmPassword', form);
 
   return (
     <div className={classes.main}>
@@ -73,15 +85,33 @@ function Login({ classes, history }) {
       <img style={{width: 120}} src={`${process.env.PUBLIC_URL}/img/97pay-logo.png`} />
       <form onSubmit={handleSubmit} className={classes.form}>
         <FormControl margin="normal" required fullWidth>
-          <TextField {...username.input} label="Mobile No" fullWidth />
-          {username.meta.touched && username.meta.error && (
-            <div className={classes.error}>{username.meta.error}</div>
+          <TextField {...fullname.input} label="Enter Your Display Name" fullWidth />
+          {fullname.meta.touched && fullname.meta.error && (
+            <div className={classes.error}>{fullname.meta.error}</div>
           )}
         </FormControl>
         <FormControl margin="normal" required fullWidth>
-          <TextField {...password.input} label="Password" type="password" fullWidth />
+          <TextField {...phone.input} label="Enter Mobile No" fullWidth />
+          {phone.meta.touched && phone.meta.error && (
+            <div className={classes.error}>{phone.meta.error}</div>
+          )}
+        </FormControl>
+        <FormControl margin="normal" required fullWidth>
+          <TextField {...email.input} label="Enter Your Primary Email" fullWidth />
+          {email.meta.touched && email.meta.error && (
+            <div className={classes.error}>{email.meta.error}</div>
+          )}
+        </FormControl>
+        <FormControl margin="normal" required fullWidth>
+          <TextField {...password.input} label="Enter Your Password" type="password" fullWidth />
           {password.meta.touched && password.meta.error && (
             <div className={classes.error}>{password.meta.error}</div>
+          )}
+        </FormControl>
+        <FormControl margin="normal" required fullWidth>
+          <TextField {...confirmPassword.input} label="Retype Your Password" type="password" fullWidth />
+          {confirmPassword.meta.touched && confirmPassword.meta.error && (
+            <div className={classes.error}>{confirmPassword.meta.error}</div>
           )}
         </FormControl>
         {loading ? (
@@ -105,17 +135,17 @@ function Login({ classes, history }) {
               disabled={submitting}
               className={classes.submit}
             >
-              Sign in
+              REGISTER
             </Button>
             <Button
-              onClick={toRegister}
+              onClick={toLogin}
               fullWidth
               variant="contained"
               color="primary"
               disabled={submitting}
               className={classes.submit}
             >
-              Register
+              BACK TO LOGIN
             </Button>
           </React.Fragment>
         )}

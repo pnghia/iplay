@@ -9,6 +9,7 @@ import Home from 'feature/home'
 import Deposit from 'feature/deposit'
 import Withdraw from 'feature/withdraw'
 import Transfer from 'feature/transfer'
+import Register from 'feature/register'
 import http from 'service/http'
 import store from 'store'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
@@ -38,6 +39,7 @@ function AuthExample() {
       <Router>
         <div>
           <Route path="/login" component={Login} />
+          <Route path="/register" component={Register} />
           <PrivateRoute path="/home" component={Home} />
           <PrivateRoute path="/deposit" component={Deposit} />
           <PrivateRoute path="/withdraw" component={Withdraw} />
