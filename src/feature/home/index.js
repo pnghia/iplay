@@ -12,7 +12,7 @@ import {
   CardActionArea,
   Card
 } from '@material-ui/core'
-
+import store from 'store'
 import { Menu, GetApp, Notifications } from '@material-ui/icons'
 
 import { map } from 'ramda'
@@ -34,9 +34,10 @@ function home({ history, classes }) {
   };
 
   const fetchData = async () => {
+    const { user_id: userId } = store.get('user')
     const [gameList, gameSynced ] = await withLoading(() => Promise.all([
       http.get({ path: 'games' }),
-      http.post({ path: 'users/205/sync-game' })
+      http.post({ path: `users/${userId}/sync-game` })
     ]));
 
     const gamesInfo = gameSynced.map(item => {

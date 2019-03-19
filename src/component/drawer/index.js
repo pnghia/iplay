@@ -33,13 +33,8 @@ const topSidebar = [
 
 const bottomSidebar = [
   {
-    title: 'Setting',
-    route: 'setting',
-    icon: <Notifications />
-  },
-  {
-    title: 'Profile',
-    route: 'profile',
+    title: 'Change Password',
+    route: 'change-password',
     icon: <PermIdentity />
   }
 ]
