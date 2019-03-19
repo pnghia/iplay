@@ -13,12 +13,16 @@ const styles = () => ({
     flexGrow: 1,
   },
   container: {
-    padding: 15,
-    marginTop: 60
+    padding: 25,
+    marginTop: 56,
+    marginBottom: 60
   },
   header: {
     fontFamily: 'AIFont',
     flexGrow: 1,
+  },
+  card: {
+    marginBottom: 25
   }
 })
 

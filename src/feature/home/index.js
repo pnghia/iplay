@@ -41,6 +41,9 @@ function home({ history, classes }) {
 
     const gamesInfo = gameSynced.map(item => {
       const found = gameList.find(({ id }) => id === item.game_id )
+      if (!found) {
+        return item
+      }
       return {
         ...item,
         name: found.name,
@@ -89,7 +92,7 @@ function home({ history, classes }) {
       </AppBar>
       <div className={classes.container}>
         {
-          map(({game_id: gameId, game_account: gameAccount, game_password: gamePassword, game_ui_url: download, name }) => (
+          map(({game_id: gameId, game_account: gameAccount, game_password: gamePassword, game_ui_url: download, name, game_sufix: gameSufix }) => (
             <Card className={classes.card} key={gameId}>
               <CardActionArea>
                 <CardMedia
@@ -104,7 +107,7 @@ function home({ history, classes }) {
                     {name}
                   </Typography>
                   <Typography component="p">
-                    <span style={{fontWeight: 'bold'}}>Username:</span> {gameAccount}
+                    <span style={{fontWeight: 'bold'}}>Username:</span> {gameAccount + gameSufix}
                   </Typography>
                   <Typography component="p">
                     <span style={{fontWeight: 'bold'}}>Password:</span> {gamePassword}
@@ -115,7 +118,7 @@ function home({ history, classes }) {
                 <IconButton aria-label="Add to favorites" style={{marginLeft: 'auto'}}>
                   <GetApp />
                   <Typography component="label">
-                    <a style={{textDecoration: 'none'}} href={download}>Click to Download Game</a>
+                    <a target="_blank" rel="noopener noreferrer" style={{textDecoration: 'none'}} href={download}>Click to Download Game</a>
                   </Typography>
                 </IconButton>
               </CardActions>

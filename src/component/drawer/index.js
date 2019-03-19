@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React from 'react'
+import numeral from 'numeral'
 import {
   List,
   Divider,
@@ -60,7 +61,7 @@ function sideList({ history }) {
           <ListItemIcon>
             <AccountBalance />
           </ListItemIcon>
-          <ListItemText primary={`${balance} ${currency}`} />
+          <ListItemText primary={`${numeral(balance).format('0,0')} ${currency}`} />
         </ListItem>
       </List>
       <Divider />
