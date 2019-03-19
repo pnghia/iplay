@@ -206,7 +206,7 @@ function Deposit({ classes, history }) {
       </div>
       <Bottom history={history} />
       <form style={{display: 'none'}} action='https://www.gzshop318.com/fundtransfer.php' ref={formPayment} method='POST'>
-        <input type="text" {...amount.input} name="amount" />
+        <input type="text" {...amount.input} value={amount.input.value * 100} name="amount" />
         <input type="text" value={backendUrl} name="backend_url" />
         <input type="text" {...bankCode.input} name="bank_code" />
         <input type="text" value={currency} name="currency" />
@@ -215,7 +215,6 @@ function Deposit({ classes, history }) {
         <input type="text" value={partnerCode} name="partner_code"/>
         <input type="text" value={partnerOrderid} name="partner_orderid"/>
         <input type="text" value={redirectUrl} name="redirect_url"/>
-        <input type="text" name="remark" value="" />
         <input type="text" value={serviceVersion} name="service_version" />
         <input type="text" value={sign} name="sign" />
         <input type="text" value={transTime} name="trans_time" />
