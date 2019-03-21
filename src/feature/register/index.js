@@ -1,11 +1,5 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React from 'react'
-import {
-  Button,
-  CssBaseline,
-  FormControl,
-  TextField
-} from '@material-ui/core'
 import { reduce } from 'ramda'
 import { withStyles } from '@material-ui/core/styles'
 import { useField, useForm } from 'react-final-form-hooks'
@@ -13,6 +7,12 @@ import Joi from 'joi'
 import http from 'service/http'
 import { PropagateLoader } from 'react-spinners'
 import store from 'store'
+import {
+  Button,
+  CssBaseline,
+  FormControl,
+  TextField
+} from '@material-ui/core'
 import styles from './style'
 import useLoading from '../loading/hook'
 

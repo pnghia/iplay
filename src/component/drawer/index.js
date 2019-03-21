@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React from 'react'
 import numeral from 'numeral'
+import { AccountBalance, Gavel, Payment, PermIdentity, SentimentDissatisfied, TransferWithinAStation } from '@material-ui/icons'
 import {
   Divider,
   List,
@@ -11,7 +12,7 @@ import {
 
 import store from 'store'
 import { map } from 'ramda'
-import { AccountBalance, Gavel, Payment, PermIdentity, SentimentDissatisfied, TransferWithinAStation } from '@material-ui/icons'
+
 
 const topSidebar = [
   {

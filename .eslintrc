@@ -12,13 +12,7 @@
     "no-underscore-dangle": 0,
     "semi": ["error", "never"],
     "import/imports-first": ["error", "absolute-first"],
-    "import/newline-after-import": "error",
-    "sort-imports": ["error", {
-        "ignoreCase": false,
-        "ignoreDeclarationSort": false,
-        "ignoreMemberSort": false,
-        "memberSyntaxSortOrder": ["none", "all", "multiple", "single"]
-    }]
+    "import/newline-after-import": "error"
   },
   "globals": {
     "window": true,
