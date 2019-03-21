@@ -1,30 +1,30 @@
-/* eslint-disable jsx-a11y/alt-text */
-import React from 'react';
-import { reduce } from 'ramda';
+import React from 'react'
 import {
   Button,
-  TextField,
-  CssBaseline,
-  FormControl
-} from '@material-ui/core';
-
-import { withStyles } from '@material-ui/core/styles';
-import { useForm, useField } from 'react-final-form-hooks';
-import Joi from 'joi';
-import http from 'service/http';
-import { PropagateLoader } from 'react-spinners';
+  CssBaseline
+} from '@material-ui/core'
+import { withStyles } from '@material-ui/core/styles'
+import { useForm } from 'react-final-form-hooks'
+import TextInput from 'component/textInput'
+import Joi from 'joi'
+import http from 'service/http'
+import validate from 'service/form/validation'
+import formCreateInputs from 'service/form/create'
+import { PropagateLoader } from 'react-spinners'
 import store from 'store'
-import styles from './style';
-import useLoading from '../loading/hook';
+import styles from './style'
+import useLoading from '../loading/hook'
 
 function Login({ classes, history }) {
-  const [loading, withLoading] = useLoading(false);
+  const [loading, withLoading] = useLoading(false)
+
   const toRegister = () => history.push('register')
+
   const onSubmit = async payload => {
     try {
       const { id_token: token, user } = await withLoading(() =>
         http.post({ path: 'authenticate', payload })
-      );
+      )
       
       http.setJwtToken(token)
       store.set('token', token)
@@ -33,87 +33,41 @@ function Login({ classes, history }) {
     } catch (error) {
       throw error
     }
-  };
+  }
 
   const schema = Joi.object().keys({
+    username: Joi.number()
+      .required(),
     password: Joi.string()
       .regex(/^[a-zA-Z0-9]{3,30}$/)
       .required(),
-    username: Joi.number()
-      .required()
-  });
-
-  const validate = values => {
-    return Joi.validate(values, schema, err => {
-      if (!err) {
-        return {};
-      }
-      const generateErr = (accumulator, { message, path: [name] }) => {
-        return {
-          ...accumulator,
-          [name]: message
-        };
-      };
-      const error = reduce(generateErr, {}, err.details);
-      return error;
-    });
-  };
+  })
 
   const { form, handleSubmit, submitting } = useForm({
     onSubmit,
-    validate
-  });
+    validate: validate(schema)
+  })
 
-  const username = useField('username', form);
-  const password = useField('password', form);
+  const [username, password] = formCreateInputs(['username', 'password'], form)
 
   return (
     <div className={classes.main}>
       <CssBaseline />
-      <img style={{width: 120}} src={`${process.env.PUBLIC_URL}/img/97pay-logo.png`} />
+      <img style={{width: 120}} alt='iplay' src={`${process.env.PUBLIC_URL}/img/97pay-logo.png`} />
       <form onSubmit={handleSubmit} className={classes.form}>
-        <FormControl margin="normal" required fullWidth>
-          <TextField {...username.input} label="Mobile No" fullWidth />
-          {username.meta.touched && username.meta.error && (
-            <div className={classes.error}>{username.meta.error}</div>
-          )}
-        </FormControl>
-        <FormControl margin="normal" required fullWidth>
-          <TextField {...password.input} label="Password" type="password" fullWidth />
-          {password.meta.touched && password.meta.error && (
-            <div className={classes.error}>{password.meta.error}</div>
-          )}
-        </FormControl>
+        <TextInput input={username} label='Enter Mobile No' />
+        <TextInput input={password} label='Enter Password' />
         {loading ? (
-          <div
-            style={{ display: 'flex', justifyContent: 'center', margin: 15 }}
-          >
-            <PropagateLoader
-              sizeUnit="px"
-              size={20}
-              color="#f50057"
-              loading={loading}
+          <div style={{ display: 'flex', justifyContent: 'center', margin: 15 }} >
+            <PropagateLoader sizeUnit="px"  size={20} color="#f50057" loading={loading}
             />
           </div>
         ) : (
           <React.Fragment>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              disabled={submitting}
-              className={classes.submit}
-            >
+            <Button type="submit" fullWidth variant="contained" color="primary" disabled={submitting} className={classes.submit} >
               Sign in
             </Button>
-            <Button
-              onClick={toRegister}
-              fullWidth
-              variant="contained"
-              color="primary"
-              disabled={submitting}
-              className={classes.submit}
+            <Button onClick={toRegister} fullWidth variant="contained" color="primary" disabled={submitting} className={classes.submit}
             >
               Register
             </Button>
@@ -121,7 +75,7 @@ function Login({ classes, history }) {
         )}
       </form>
     </div>
-  );
+  )
 }
 
-export default withStyles(styles)(Login);
+export default withStyles(styles)(Login)

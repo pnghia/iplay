@@ -1,18 +1,18 @@
-const express = require('express');
-const path = require('path');
-const morgan = require('morgan');
-require('dotenv').config();
+const express = require('express')
+const path = require('path')
+const morgan = require('morgan')
+require('dotenv').config()
 
-const { PORT } = process.env;
-const app = express();
+const { PORT } = process.env
+const app = express()
 
-app.use(express.static(path.join(__dirname, 'build')));
-app.use(morgan('dev'));
+app.use(express.static(path.join(__dirname, 'build')))
+app.use(morgan('dev'))
 
 app.get('/*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
+  res.sendFile(path.join(__dirname, 'build', 'index.html'))
+})
 
 app.listen(PORT, () => {
-  console.info(`Server Listening At ${PORT}`);
-});
+  console.info(`Server Listening At ${PORT}`)
+})

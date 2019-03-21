@@ -1,46 +1,46 @@
 /* eslint-disable jsx-a11y/alt-text */
-import React, { useState } from 'react';
-import { reduce } from 'ramda';
+import React, { useState } from 'react'
+import { reduce } from 'ramda'
 import {
-  Button,
-  TextField,
-  CssBaseline,
-  FormControl,
-  Typography,
   AppBar,
-  Toolbar,
-  IconButton,
+  Button,
+  CssBaseline,
   Drawer,
+  FormControl,
+  IconButton,
   Snackbar,
-  SnackbarContent
-} from '@material-ui/core';
+  SnackbarContent,
+  TextField,
+  Toolbar,
+  Typography
+} from '@material-ui/core'
 
 import Sidebar from 'component/drawer'
 import Bottom from 'component/bottom'
-import { withStyles } from '@material-ui/core/styles';
-import { useForm, useField } from 'react-final-form-hooks';
-import Joi from 'joi';
-import http from 'service/http';
-import { PropagateLoader } from 'react-spinners';
+import { withStyles } from '@material-ui/core/styles'
+import { useField, useForm } from 'react-final-form-hooks'
+import Joi from 'joi'
+import http from 'service/http'
+import { PropagateLoader } from 'react-spinners'
 import store from 'store'
-import { Menu, Close, Notifications } from '@material-ui/icons';
-import styles from './style';
-import useLoading from '../loading/hook';
+import { Close, Menu, Notifications } from '@material-ui/icons'
+import styles from './style'
+import useLoading from '../loading/hook'
 
 function Withdraw({ classes, history }) {
   const [loading, withLoading] = useLoading(false)
   const [drawer, toggleDrawer] = useState(false)
-  const [openSnackbar, setOpenSnackbar] = React.useState(false);
+  const [openSnackbar, setOpenSnackbar] = React.useState(false)
 
   function handleCloseSnackbar(event, reason) {
     if (reason === 'clickaway') {
-      return;
+      return
     }
-    setOpenSnackbar(false);
+    setOpenSnackbar(false)
   }
   const onToggleDrawer = status => () => {
-    toggleDrawer(status);
-  };
+    toggleDrawer(status)
+  }
 
   const onSubmit = async payload => {
     try {
@@ -56,12 +56,12 @@ function Withdraw({ classes, history }) {
       }
       await withLoading(() =>
         http.post({ path: `users/${userId}/withdraw`, payload: submited })
-      );
-      setOpenSnackbar(true);
+      )
+      setOpenSnackbar(true)
     } catch (error) {
       throw error
     }
-  };
+  }
 
   const schema = Joi.object().keys({
     bankName: Joi.string()
@@ -75,36 +75,36 @@ function Withdraw({ classes, history }) {
       .required(),
     amount: Joi.number()
       .required()
-  });
+  })
 
   const validate = values => {
     return Joi.validate(values, schema, err => {
       if (!err) {
-        return {};
+        return {}
       }
       const generateErr = (accumulator, { message, path: [name] }) => {
         return {
           ...accumulator,
           [name]: message
-        };
-      };
-      const error = reduce(generateErr, {}, err.details);
-      return error;
-    });
-  };
+        }
+      }
+      const error = reduce(generateErr, {}, err.details)
+      return error
+    })
+  }
 
   const { form, handleSubmit, submitting } = useForm({
     onSubmit,
     validate
-  });
+  })
 
-  const bankName = useField('bankName', form);
+  const bankName = useField('bankName', form)
   const bankAccountName = useField('bankAccountName', form)
   const bankAccountNo = useField('bankAccountNo', form)
-  const amount = useField('amount', form);
+  const amount = useField('amount', form)
 
   function MySnackbarContentWrapper(props) {
-    const { className, message, onClose, variant, ...other } = props;
+    const { className, message, onClose, variant, ...other } = props
     return (
       <SnackbarContent
         style={{backgroundColor: '#007DFE'}}
@@ -127,7 +127,7 @@ function Withdraw({ classes, history }) {
         ]}
         {...other}
       />
-    );
+    )
   }
 
   return (
@@ -235,7 +235,7 @@ function Withdraw({ classes, history }) {
         />
       </Snackbar>
     </div>
-  );
+  )
 }
 
-export default withStyles(styles)(Withdraw);
+export default withStyles(styles)(Withdraw)

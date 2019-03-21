@@ -2,8 +2,8 @@
 import React from 'react'
 import numeral from 'numeral'
 import {
-  List,
   Divider,
+  List,
   ListItem,
   ListItemIcon,
   ListItemText
@@ -11,7 +11,7 @@ import {
 
 import store from 'store'
 import { map } from 'ramda'
-import { TransferWithinAStation, Payment, Gavel, PermIdentity, Notifications, SentimentDissatisfied, AccountBalance } from '@material-ui/icons'
+import { AccountBalance, Gavel, Payment, PermIdentity, SentimentDissatisfied, TransferWithinAStation } from '@material-ui/icons'
 
 const topSidebar = [
   {
@@ -88,7 +88,7 @@ function sideList({ history }) {
           </ListItem>
       </List>
     </div>
-  );
+  )
 }
 
-export default sideList;
+export default sideList

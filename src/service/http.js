@@ -1,12 +1,12 @@
 /* eslint-disable no-restricted-globals */
-import axios from 'axios';
+import axios from 'axios'
 import config from 'config'
 
 function handleErrors(response) {
   if (response.status === 401) {
     location.href = '/login'
 }
-return response;
+return response
 }
 
 export default {
@@ -15,15 +15,15 @@ export default {
   headers: {},
 
   setJwtToken(token) {
-    this.token = token;
-    this.establishHeaderRequest();
+    this.token = token
+    this.establishHeaderRequest()
   },
 
   establishHeaderRequest() {
     this.headers = {
       'content-type': 'application/json',
       'Authorization': `Bearer ${this.token}`
-    };
+    }
   },
 
   get({
@@ -53,7 +53,7 @@ export default {
       method: 'PUT',
       url: path,
       headers: this.headers
-    });
+    })
   },
 
   post({
@@ -88,6 +88,6 @@ export default {
         ...this.headers,
         'Content-Type': 'multipart/form-data'
       }
-    });
+    })
   }
-};
+}

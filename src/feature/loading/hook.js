@@ -14,6 +14,6 @@ function useLoading(status) {
       throw error
     }
   }
-  return [ loading, withLoading ];
+  return [ loading, withLoading ]
 }
-export default useLoading;
+export default useLoading

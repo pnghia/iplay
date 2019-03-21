@@ -1,24 +1,23 @@
 /* eslint-disable jsx-a11y/alt-text */
-import React from 'react';
-import { reduce } from 'ramda';
+import React from 'react'
 import {
   Button,
-  TextField,
   CssBaseline,
-  FormControl
-} from '@material-ui/core';
-
-import { withStyles } from '@material-ui/core/styles';
-import { useForm, useField } from 'react-final-form-hooks';
-import Joi from 'joi';
-import http from 'service/http';
-import { PropagateLoader } from 'react-spinners';
+  FormControl,
+  TextField
+} from '@material-ui/core'
+import { reduce } from 'ramda'
+import { withStyles } from '@material-ui/core/styles'
+import { useField, useForm } from 'react-final-form-hooks'
+import Joi from 'joi'
+import http from 'service/http'
+import { PropagateLoader } from 'react-spinners'
 import store from 'store'
-import styles from './style';
-import useLoading from '../loading/hook';
+import styles from './style'
+import useLoading from '../loading/hook'
 
 function Login({ classes, history }) {
-  const [loading, withLoading] = useLoading(false);
+  const [loading, withLoading] = useLoading(false)
   const toLogin = () => history.push('login')
   const onSubmit = async ({ email, password, fullname, phone }) => {
     try {
@@ -29,7 +28,7 @@ function Login({ classes, history }) {
       }
       const { id_token: token, user } = await withLoading(() =>
         http.post({ path: 'users', payload })
-      );
+      )
       
       http.setJwtToken(token)
       store.set('token', token)
@@ -38,7 +37,7 @@ function Login({ classes, history }) {
     } catch (error) {
       throw error
     }
-  };
+  }
 
   const schema = Joi.object().keys({
     fullname: Joi.string()
@@ -50,34 +49,34 @@ function Login({ classes, history }) {
       .regex(/^[a-zA-Z0-9]{3,30}$/)
       .required(),
     confirmPassword: Joi.string().valid(Joi.ref('password')).required()
-  });
+  })
 
   const validate = values => {
     return Joi.validate(values, schema, err => {
       if (!err) {
-        return {};
+        return {}
       }
       const generateErr = (accumulator, { message, path: [name] }) => {
         return {
           ...accumulator,
           [name]: message
-        };
-      };
-      const error = reduce(generateErr, {}, err.details);
-      return error;
-    });
-  };
+        }
+      }
+      const error = reduce(generateErr, {}, err.details)
+      return error
+    })
+  }
 
   const { form, handleSubmit, submitting } = useForm({
     onSubmit,
     validate
-  });
+  })
 
-  const phone = useField('phone', form);
-  const password = useField('password', form);
-  const fullname = useField('fullname', form);
-  const email = useField('email', form);
-  const confirmPassword = useField('confirmPassword', form);
+  const phone = useField('phone', form)
+  const password = useField('password', form)
+  const fullname = useField('fullname', form)
+  const email = useField('email', form)
+  const confirmPassword = useField('confirmPassword', form)
 
   return (
     <div className={classes.main}>
@@ -151,7 +150,7 @@ function Login({ classes, history }) {
         )}
       </form>
     </div>
-  );
+  )
 }
 
-export default withStyles(styles)(Login);
+export default withStyles(styles)(Login)

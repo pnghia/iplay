@@ -1,62 +1,62 @@
 /* eslint-disable camelcase */
 /* eslint-disable jsx-a11y/alt-text */
-import React, { useState, useRef } from 'react';
-import { reduce } from 'ramda';
+import React, { useRef, useState } from 'react'
+import { reduce } from 'ramda'
 import {
+  AppBar,
   Button,
-  TextField,
+  Checkbox,
   CssBaseline,
+  Drawer,
   FormControl,
+  FormControlLabel,
+  IconButton,
   InputLabel,
   MenuItem,
   Select,
-  FormControlLabel,
-  Checkbox,
-  Typography,
-  AppBar,
+  TextField,
   Toolbar,
-  IconButton,
-  Drawer,
-} from '@material-ui/core';
+  Typography,
+} from '@material-ui/core'
 
 import Sidebar from 'component/drawer'
 import Bottom from 'component/bottom'
-import { withStyles } from '@material-ui/core/styles';
-import { useForm, useField } from 'react-final-form-hooks';
-import Joi from 'joi';
-import http from 'service/http';
-import { PropagateLoader } from 'react-spinners';
+import { withStyles } from '@material-ui/core/styles'
+import { useField, useForm } from 'react-final-form-hooks'
+import Joi from 'joi'
+import http from 'service/http'
+import { PropagateLoader } from 'react-spinners'
 import store from 'store'
-import { Menu, Notifications } from '@material-ui/icons';
-import styles from './style';
-import useLoading from '../loading/hook';
+import { Menu, Notifications } from '@material-ui/icons'
+import styles from './style'
+import useLoading from '../loading/hook'
 
 function Deposit({ classes, history }) {
-  const [loading, withLoading] = useLoading(false);
-  const [open, setOpen] = React.useState(false);
-  const [drawer, toggleDrawer] = useState(false);
-  const formPayment = useRef(null);
+  const [loading, withLoading] = useLoading(false)
+  const [open, setOpen] = React.useState(false)
+  const [drawer, toggleDrawer] = useState(false)
+  const formPayment = useRef(null)
   const onToggleDrawer = status => () => {
-    toggleDrawer(status);
-  };
+    toggleDrawer(status)
+  }
 
   const [backendUrl, setBackendUrl]  = useState()
-  const [currency, setCurrency] = useState();
-  const [memberId, setMemberId] = useState();
-  const [memberIp, setMemberIp] = useState();
-  const [partnerCode, setPartnerCode] = useState();
-  const [partnerOrderid, setPartnerOrderid] = useState();
-  const [redirectUrl, setRedirectUrl] = useState();
-  const [serviceVersion, setServiceVersion] = useState();
-  const [sign, setSign] = useState();
-  const [transTime, setTransTime] = useState();
+  const [currency, setCurrency] = useState()
+  const [memberId, setMemberId] = useState()
+  const [memberIp, setMemberIp] = useState()
+  const [partnerCode, setPartnerCode] = useState()
+  const [partnerOrderid, setPartnerOrderid] = useState()
+  const [redirectUrl, setRedirectUrl] = useState()
+  const [serviceVersion, setServiceVersion] = useState()
+  const [sign, setSign] = useState()
+  const [transTime, setTransTime] = useState()
 
   const onSubmit = async ({ bankCode, amount }) => {
     try {
       const { user_id: userId } = store.get('user')
       const payload = await withLoading(() =>
         http.get({ path: `api/payment/${userId}/sign?bankCode=${bankCode}&amount=${amount}` })
-      );
+      )
       setBackendUrl(payload.backend_url)
       setCurrency(payload.currency)
       setMemberId(payload.member_id)
@@ -67,50 +67,50 @@ function Deposit({ classes, history }) {
       setServiceVersion(payload.service_version)
       setSign(payload.sign)
       setTransTime(payload.trans_time)
-      formPayment.current.submit();
+      formPayment.current.submit()
     } catch (error) {
       throw error
     }
-  };
+  }
 
   const schema = Joi.object().keys({
     bankCode: Joi.string()
       .required(),
     amount: Joi.number()
       .required()
-  });
+  })
 
   const validate = values => {
     return Joi.validate(values, schema, err => {
       if (!err) {
-        return {};
+        return {}
       }
       const generateErr = (accumulator, { message, path: [name] }) => {
         return {
           ...accumulator,
           [name]: message
-        };
-      };
-      const error = reduce(generateErr, {}, err.details);
-      return error;
-    });
-  };
+        }
+      }
+      const error = reduce(generateErr, {}, err.details)
+      return error
+    })
+  }
 
   const { form, handleSubmit, submitting } = useForm({
     onSubmit,
     validate
-  });
+  })
 
   function handleClose() {
-    setOpen(false);
+    setOpen(false)
   }
 
   function handleOpen() {
-    setOpen(true);
+    setOpen(true)
   }
 
-  const bankCode = useField('bankCode', form);
-  const amount = useField('amount', form);
+  const bankCode = useField('bankCode', form)
+  const amount = useField('amount', form)
 
   return (
     <div className={classes.root}>
@@ -220,7 +220,7 @@ function Deposit({ classes, history }) {
         <input type="text" value={transTime} name="trans_time" />
       </form>
     </div>
-  );
+  )
 }
 
-export default withStyles(styles)(Deposit);
+export default withStyles(styles)(Deposit)

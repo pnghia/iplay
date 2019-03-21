@@ -1,56 +1,56 @@
 /* eslint-disable jsx-a11y/alt-text */
-import React, { useState } from 'react';
-import { reduce } from 'ramda';
+import React, { useState } from 'react'
+import { reduce } from 'ramda'
 import {
+  AppBar,
   Button,
-  TextField,
   CssBaseline,
+  Drawer,
   FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
   FormControlLabel,
   FormLabel,
-  Typography,
-  AppBar,
-  Toolbar,
   IconButton,
-  Drawer,
-  RadioGroup,
+  InputLabel,
+  MenuItem,
   Radio,
-  Snackbar
-} from '@material-ui/core';
+  RadioGroup,
+  Select,
+  Snackbar,
+  TextField,
+  Toolbar,
+  Typography
+} from '@material-ui/core'
 
 import Sidebar from 'component/drawer'
 import Bottom from 'component/bottom'
-import { withStyles } from '@material-ui/core/styles';
-import { useForm, useField } from 'react-final-form-hooks';
-import Joi from 'joi';
-import http from 'service/http';
-import { PropagateLoader } from 'react-spinners';
+import { withStyles } from '@material-ui/core/styles'
+import { useField, useForm } from 'react-final-form-hooks'
+import Joi from 'joi'
+import http from 'service/http'
+import { PropagateLoader } from 'react-spinners'
 import store from 'store'
-import { Menu, Close as CloseIcon, Notifications } from '@material-ui/icons';
-import styles from './style';
-import useLoading from '../loading/hook';
+import { Close as CloseIcon, Menu, Notifications } from '@material-ui/icons'
+import styles from './style'
+import useLoading from '../loading/hook'
 
 function Deposit({ classes, history }) {
-  const [loading, withLoading] = useLoading(false);
-  const [openGameSelector, setOpenGameSelector] = useState(false);
-  const [msgTrans, setMsgTrans] = useState('');
-  const [drawer, toggleDrawer] = useState(false);
-  const [openSnackbarError, setOpenSnackbarError] = React.useState(false);
+  const [loading, withLoading] = useLoading(false)
+  const [openGameSelector, setOpenGameSelector] = useState(false)
+  const [msgTrans, setMsgTrans] = useState('')
+  const [drawer, toggleDrawer] = useState(false)
+  const [openSnackbarError, setOpenSnackbarError] = React.useState(false)
 
   function handleCloseSnackbarError(event, reason) {
     if (reason === 'clickaway') {
-      return;
+      return
     }
 
-    setOpenSnackbarError(false);
+    setOpenSnackbarError(false)
   }
 
   const onToggleDrawer = status => () => {
-    toggleDrawer(status);
-  };
+    toggleDrawer(status)
+  }
 
   const onSubmit = async payload => {
     try {
@@ -70,9 +70,9 @@ function Deposit({ classes, history }) {
       setMsgTrans('Transfer is successfully finished')
       setOpenSnackbarError(true)
     } catch (error) {
-      setOpenSnackbarError(true);
+      setOpenSnackbarError(true)
     }
-  };
+  }
 
   const schema = Joi.object().keys({
     transferType: Joi.string()
@@ -82,23 +82,23 @@ function Deposit({ classes, history }) {
     amount: Joi.number()
       .min(50)
       .required()
-  });
+  })
 
   const validate = values => {
     return Joi.validate(values, schema, err => {
       if (!err) {
-        return {};
+        return {}
       }
       const generateErr = (accumulator, { message, path: [name] }) => {
         return {
           ...accumulator,
           [name]: message
-        };
-      };
-      const error = reduce(generateErr, {}, err.details);
-      return error;
-    });
-  };
+        }
+      }
+      const error = reduce(generateErr, {}, err.details)
+      return error
+    })
+  }
 
   const { form, handleSubmit, submitting } = useForm({
     onSubmit,
@@ -106,19 +106,19 @@ function Deposit({ classes, history }) {
     initialValues: {
       transferType: 'in'
     }
-  });
+  })
 
   function handleCloseGameSelector() {
-    setOpenGameSelector(false);
+    setOpenGameSelector(false)
   }
 
   function handleOpenGameSelector() {
-    setOpenGameSelector(true);
+    setOpenGameSelector(true)
   }
 
-  const transferType = useField('transferType', form);
-  const game = useField('game', form);
-  const amount = useField('amount', form);
+  const transferType = useField('transferType', form)
+  const game = useField('game', form)
+  const amount = useField('amount', form)
 
   return (
     <div className={classes.root}>
@@ -242,7 +242,7 @@ function Deposit({ classes, history }) {
         ]}
       />
     </div>
-  );
+  )
 }
 
-export default withStyles(styles)(Deposit);
+export default withStyles(styles)(Deposit)

@@ -21,6 +21,6 @@ const styles = theme => ({
     marginTop: theme.spacing.unit * 3,
     fontWeight: 'bold'
   },
-});
+})
 
-export default styles;
+export default styles

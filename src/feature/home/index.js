@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react'
-import { withStyles } from '@material-ui/core/styles';
+import React, { useEffect, useState } from 'react'
+import { withStyles } from '@material-ui/core/styles'
 import {
-  Typography,
   AppBar,
-  Toolbar,
-  IconButton,
-  Drawer,
-  CardMedia,
-  CardContent,
-  CardActions,
+  Card,
   CardActionArea,
-  Card
+  CardActions,
+  CardContent,
+  CardMedia,
+  Drawer,
+  IconButton,
+  Toolbar,
+  Typography
 } from '@material-ui/core'
 import store from 'store'
-import { Menu, GetApp, Notifications } from '@material-ui/icons'
+import { GetApp, Menu, Notifications } from '@material-ui/icons'
 
 import { map } from 'ramda'
 
@@ -21,24 +21,24 @@ import http from 'service/http'
 import Sidebar from 'component/drawer'
 import Bottom from 'component/bottom'
 import useLoading from '../loading/hook'
-import styles from './style';
+import styles from './style'
 
 function home({ history, classes }) {
-  const [, withLoading] = useLoading(false);
+  const [, withLoading] = useLoading(false)
 
-  const [games, updateGames] = useState([]);
-  const [drawer, toggleDrawer] = useState(false);
+  const [games, updateGames] = useState([])
+  const [drawer, toggleDrawer] = useState(false)
 
   const onToggleDrawer = status => () => {
-    toggleDrawer(status);
-  };
+    toggleDrawer(status)
+  }
 
   const fetchData = async () => {
     const { user_id: userId } = store.get('user')
     const [gameList, gameSynced ] = await withLoading(() => Promise.all([
       http.get({ path: 'games' }),
       http.post({ path: `users/${userId}/sync-game` })
-    ]));
+    ]))
 
     const gamesInfo = gameSynced.map(item => {
       const found = gameList.find(({ id }) => id === item.game_id )
@@ -52,11 +52,11 @@ function home({ history, classes }) {
       }
     })
     updateGames(gamesInfo)
-  };
+  }
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    fetchData()
+  }, [])
 
 
   return (
@@ -129,6 +129,6 @@ function home({ history, classes }) {
       </div>
       <Bottom history={history} />
     </div>
-  );
+  )
 }
-export default withStyles(styles)(home);
+export default withStyles(styles)(home)

@@ -1,8 +1,8 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/styles';
-import BottomNavigation from '@material-ui/core/BottomNavigation';
-import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
-import { Dashboard, Sync, Payment, Gavel } from '@material-ui/icons';
+import React from 'react'
+import { makeStyles } from '@material-ui/styles'
+import BottomNavigation from '@material-ui/core/BottomNavigation'
+import BottomNavigationAction from '@material-ui/core/BottomNavigationAction'
+import { Dashboard, Gavel, Payment, Sync } from '@material-ui/icons'
 
 const useStyles = makeStyles({
   root: {
@@ -13,11 +13,11 @@ const useStyles = makeStyles({
     borderTop: '1px solid #ccc',
     backgroundColor: '#007DFE',
   },
-});
+})
 
 function SimpleBottomNavigation({ history }) {
-  const classes = useStyles();
-  const [value, setValue] = React.useState(0);
+  const classes = useStyles()
+  const [value, setValue] = React.useState(0)
 
   return (
     <BottomNavigation
@@ -34,7 +34,7 @@ function SimpleBottomNavigation({ history }) {
       <BottomNavigationAction style={{color: 'white'}} value='deposit' label="Topup" icon={<Payment />} />
       <BottomNavigationAction style={{color: 'white'}} value='withdraw' label="Withdraw" icon={<Gavel />} />
     </BottomNavigation>
-  );
+  )
 }
 
-export default SimpleBottomNavigation;
+export default SimpleBottomNavigation

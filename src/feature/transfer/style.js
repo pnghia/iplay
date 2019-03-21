@@ -40,6 +40,6 @@ const styles = theme => ({
     fontFamily: 'AIFont',
     flexGrow: 1,
   }
-});
+})
 
-export default styles;
+export default styles

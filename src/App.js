@@ -1,8 +1,8 @@
 import React from "react"
 import {
-  BrowserRouter as Router,
+  Redirect,
   Route,
-  Redirect
+  BrowserRouter as Router
 } from "react-router-dom"
 import Login from 'feature/login'
 import Home from 'feature/home'
@@ -48,7 +48,7 @@ function AuthExample() {
         </div>
       </Router>
     </MuiThemeProvider>
-  );
+  )
 }
 
 function PrivateRoute({ component: Component, ...rest }) {
@@ -71,7 +71,7 @@ function PrivateRoute({ component: Component, ...rest }) {
         )
       }
     />
-  );
+  )
 }
 
-export default AuthExample;
+export default AuthExample
