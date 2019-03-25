@@ -2,7 +2,6 @@ import React from 'react'
 import { makeStyles } from '@material-ui/styles'
 import BottomNavigation from '@material-ui/core/BottomNavigation'
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction'
-import { Dashboard, Gavel, Payment, Sync } from '@material-ui/icons'
 
 const useStyles = makeStyles({
   root: {
@@ -10,8 +9,7 @@ const useStyles = makeStyles({
     position: 'fixed',
     top: 'auto',
     bottom: 0,
-    borderTop: '1px solid #ccc',
-    backgroundColor: '#007DFE',
+    borderTop: '1px solid #ccc'
   },
 })
 
@@ -29,10 +27,10 @@ function SimpleBottomNavigation({ history }) {
       showLabels
       className={classes.root}
     >
-      <BottomNavigationAction style={{color: 'white'}} value='home' label="Home" icon={<Dashboard />} />
-      <BottomNavigationAction style={{color: 'white'}} value='transfer' label="Transfer" icon={<Sync/>} />
-      <BottomNavigationAction style={{color: 'white'}} value='deposit' label="Topup" icon={<Payment />} />
-      <BottomNavigationAction style={{color: 'white'}} value='withdraw' label="Withdraw" icon={<Gavel />} />
+      <BottomNavigationAction style={{color: 'rgba(0, 0, 0, 0.87)'}} value='home' label="Home" icon={<img alt='iplay' style={{width: 30}} src={`${process.env.PUBLIC_URL}/icon/icon-home.svg`} />} />
+      <BottomNavigationAction style={{color: 'rgba(0, 0, 0, 0.87)'}} value='transfer' label="Transfer" icon={<img alt='iplay' style={{width: 30}} src={`${process.env.PUBLIC_URL}/icon/icon-transfer.svg`} />} />
+      <BottomNavigationAction style={{color: 'rgba(0, 0, 0, 0.87)'}} value='deposit' label="Topup" icon={<img alt='iplay' style={{width: 30}} src={`${process.env.PUBLIC_URL}/icon/icon-receive.svg`} />} />
+      <BottomNavigationAction style={{color: 'rgba(0, 0, 0, 0.87)'}} value='withdraw' label="Withdraw" icon={<img alt='iplay' style={{width: 30}} src={`${process.env.PUBLIC_URL}/icon/icon-withdraw.svg`} />} />
     </BottomNavigation>
   )
 }

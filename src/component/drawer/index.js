@@ -1,12 +1,10 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React from 'react'
 import numeral from 'numeral'
-import { AccountBalance, Gavel, Payment, PermIdentity, SentimentDissatisfied, TransferWithinAStation } from '@material-ui/icons'
 import {
   Divider,
   List,
   ListItem,
-  ListItemIcon,
   ListItemText
 } from '@material-ui/core'
 
@@ -18,17 +16,17 @@ const topSidebar = [
   {
     title: 'Transfer',
     route: 'transfer',
-    icon: <TransferWithinAStation />
+    icon: <img style={{width: 30}} src={`${process.env.PUBLIC_URL}/icon/icon-transfer.svg`} />
   },
   {
     title: 'Topup',
     route: 'deposit',
-    icon: <Payment />
+    icon: <img style={{width: 30}} src={`${process.env.PUBLIC_URL}/icon/icon-receive.svg`} />
   },
   {
     title: 'Withdraw',
     route: 'withdraw',
-    icon: <Gavel />
+    icon: <img style={{width: 30}} src={`${process.env.PUBLIC_URL}/icon/icon-transfer.svg`} />
   }
 ]
 
@@ -36,37 +34,30 @@ const bottomSidebar = [
   {
     title: 'Change Password',
     route: 'change-password',
-    icon: <PermIdentity />
+    icon: <img style={{width: 30}} src={`${process.env.PUBLIC_URL}/icon/icon-profile.svg`} />
   }
 ]
 
 function sideList({ history }) {
-  const { user_account_no: phone, user_money: balance, user_currency: currency } = store.get('user')
+  const { fullname, user_money: balance, user_currency: currency } = store.get('user')
 
   return (
     <div style={{ textAlign: 'center' }}>
       <img style={{width: 120, marginTop: 25}} src={`${process.env.PUBLIC_URL}/img/97pay-logo.png`} />
       <List>
         <ListItem style={{color: '#007DFE'}}>
-          <ListItemIcon>
-            <PermIdentity />
-          </ListItemIcon>
-          <ListItemText primary={phone} />
+          <img style={{width: 30}} src={`${process.env.PUBLIC_URL}/icon/icon-profile.svg`} />
+          <ListItemText primary={`Hi, ${fullname}`} />
         </ListItem>
         <ListItem button >
-          <ListItemIcon>
-            <AccountBalance />
-          </ListItemIcon>
-          <ListItemText primary={`${numeral(balance).format('0,0')} ${currency}`} />
+          <ListItemText primary={`Your Cash:  ${numeral(balance).format('0,0')} ${currency}`} />
         </ListItem>
       </List>
       <Divider />
       <List>
         {map(({ title, route, icon }) => (
           <ListItem button key={title} onClick={() => history.push(route)}>
-            <ListItemIcon>
-              {icon}
-            </ListItemIcon>
+            {icon}
             <ListItemText primary={title} />
           </ListItem>
         ), topSidebar)}
@@ -75,16 +66,12 @@ function sideList({ history }) {
       <List>
         {map(({ title, route, icon }) => (
           <ListItem button key={title} onClick={() => history.push(route)}>
-            <ListItemIcon>
-              {icon}
-            </ListItemIcon>
+            {icon}
             <ListItemText primary={title} />
           </ListItem>
         ), bottomSidebar)}
         <ListItem button onClick={() => { history.push('login'); store.clearAll()}}>
-            <ListItemIcon>
-              <SentimentDissatisfied />
-            </ListItemIcon>
+            <img style={{width: 30}} src={`${process.env.PUBLIC_URL}/icon/icon-logout.svg`} />
             <ListItemText primary='Logout' />
           </ListItem>
       </List>

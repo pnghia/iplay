@@ -56,7 +56,7 @@ function Login({ classes, history }) {
       <img style={{width: 120}} alt='iplay' src={`${process.env.PUBLIC_URL}/img/97pay-logo.png`} />
       <form onSubmit={handleSubmit} className={classes.form}>
         <TextInput input={username} label='Enter Mobile No' />
-        <TextInput input={password} label='Enter Password' />
+        <TextInput input={password} type='password' label='Enter Password' />
         {loading ? (
           <div style={{ display: 'flex', justifyContent: 'center', margin: 15 }} >
             <PropagateLoader sizeUnit="px"  size={20} color="#f50057" loading={loading}
