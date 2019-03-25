@@ -9,7 +9,8 @@ const useStyles = makeStyles({
     position: 'fixed',
     top: 'auto',
     bottom: 0,
-    borderTop: '1px solid #ccc'
+    borderTop: '1px solid #ccc',
+    background: '#044531'
   },
 })
 
@@ -27,10 +28,10 @@ function SimpleBottomNavigation({ history }) {
       showLabels
       className={classes.root}
     >
-      <BottomNavigationAction style={{color: 'rgba(0, 0, 0, 0.87)'}} value='home' label="Home" icon={<img alt='iplay' style={{width: 30}} src={`${process.env.PUBLIC_URL}/icon/icon-home.svg`} />} />
-      <BottomNavigationAction style={{color: 'rgba(0, 0, 0, 0.87)'}} value='transfer' label="Transfer" icon={<img alt='iplay' style={{width: 30}} src={`${process.env.PUBLIC_URL}/icon/icon-transfer.svg`} />} />
-      <BottomNavigationAction style={{color: 'rgba(0, 0, 0, 0.87)'}} value='deposit' label="Topup" icon={<img alt='iplay' style={{width: 30}} src={`${process.env.PUBLIC_URL}/icon/icon-receive.svg`} />} />
-      <BottomNavigationAction style={{color: 'rgba(0, 0, 0, 0.87)'}} value='withdraw' label="Withdraw" icon={<img alt='iplay' style={{width: 30}} src={`${process.env.PUBLIC_URL}/icon/icon-withdraw.svg`} />} />
+      <BottomNavigationAction style={{color: '#fff'}} value='home' label="Home" icon={<img alt='iplay' style={{width: 30}} src={`${process.env.PUBLIC_URL}/icon/icon-home.svg`} />} />
+      <BottomNavigationAction style={{color: '#fff'}} value='transfer' label="Transfer" icon={<img alt='iplay' style={{width: 30}} src={`${process.env.PUBLIC_URL}/icon/icon-transfer.svg`} />} />
+      <BottomNavigationAction style={{color: '#fff'}} value='deposit' label="Topup" icon={<img alt='iplay' style={{width: 30}} src={`${process.env.PUBLIC_URL}/icon/icon-receive.svg`} />} />
+      <BottomNavigationAction style={{color: '#fff'}} value='withdraw' label="Withdraw" icon={<img alt='iplay' style={{width: 30}} src={`${process.env.PUBLIC_URL}/icon/icon-withdraw.svg`} />} />
     </BottomNavigation>
   )
 }

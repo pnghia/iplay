@@ -1,17 +1,17 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React from 'react'
-import { reduce } from 'ramda'
 import { withStyles } from '@material-ui/core/styles'
-import { useField, useForm } from 'react-final-form-hooks'
+import { useForm } from 'react-final-form-hooks'
 import Joi from 'joi'
 import http from 'service/http'
+import validate from 'service/form/validation'
+import formCreateInputs from 'service/form/create'
 import { PropagateLoader } from 'react-spinners'
 import store from 'store'
+import TextInput from 'component/textInput'
 import {
   Button,
-  CssBaseline,
-  FormControl,
-  TextField
+  CssBaseline
 } from '@material-ui/core'
 import styles from './style'
 import useLoading from '../loading/hook'
@@ -51,68 +51,22 @@ function Login({ classes, history }) {
     confirmPassword: Joi.string().valid(Joi.ref('password')).required()
   })
 
-  const validate = values => {
-    return Joi.validate(values, schema, err => {
-      if (!err) {
-        return {}
-      }
-      const generateErr = (accumulator, { message, path: [name] }) => {
-        return {
-          ...accumulator,
-          [name]: message
-        }
-      }
-      const error = reduce(generateErr, {}, err.details)
-      return error
-    })
-  }
-
   const { form, handleSubmit, submitting } = useForm({
     onSubmit,
-    validate
+    validate: validate(schema)
   })
 
-  const phone = useField('phone', form)
-  const password = useField('password', form)
-  const fullname = useField('fullname', form)
-  const email = useField('email', form)
-  const confirmPassword = useField('confirmPassword', form)
-
+  const [phone, password, fullname, email, confirmPassword] = formCreateInputs(['phone', 'password', 'fullname', 'email', 'confirmPassword'], form)
   return (
     <div className={classes.main}>
       <CssBaseline />
-      <img style={{width: 120}} src={`${process.env.PUBLIC_URL}/img/97pay-logo.png`} />
+      <img style={{width: 120}} alt='iplay' src={`${process.env.PUBLIC_URL}/icon/97Pay-icon.png`} />
       <form onSubmit={handleSubmit} className={classes.form}>
-        <FormControl margin="normal" required fullWidth>
-          <TextField {...fullname.input} label="Enter Your Display Name" fullWidth />
-          {fullname.meta.touched && fullname.meta.error && (
-            <div className={classes.error}>{fullname.meta.error}</div>
-          )}
-        </FormControl>
-        <FormControl margin="normal" required fullWidth>
-          <TextField {...phone.input} label="Enter Mobile No" fullWidth />
-          {phone.meta.touched && phone.meta.error && (
-            <div className={classes.error}>{phone.meta.error}</div>
-          )}
-        </FormControl>
-        <FormControl margin="normal" required fullWidth>
-          <TextField {...email.input} label="Enter Your Primary Email" fullWidth />
-          {email.meta.touched && email.meta.error && (
-            <div className={classes.error}>{email.meta.error}</div>
-          )}
-        </FormControl>
-        <FormControl margin="normal" required fullWidth>
-          <TextField {...password.input} label="Enter Your Password" type="password" fullWidth />
-          {password.meta.touched && password.meta.error && (
-            <div className={classes.error}>{password.meta.error}</div>
-          )}
-        </FormControl>
-        <FormControl margin="normal" required fullWidth>
-          <TextField {...confirmPassword.input} label="Retype Your Password" type="password" fullWidth />
-          {confirmPassword.meta.touched && confirmPassword.meta.error && (
-            <div className={classes.error}>{confirmPassword.meta.error}</div>
-          )}
-        </FormControl>
+        <TextInput input={fullname} label='Enter Your Display Name' />
+        <TextInput input={phone} label='Enter Mobile No' />
+        <TextInput input={email} label='Enter Your Primary Email' />
+        <TextInput input={password} label='Enter Your Password' />
+        <TextInput input={confirmPassword} label='Retype Your Password' />
         {loading ? (
           <div
             style={{ display: 'flex', justifyContent: 'center', margin: 15 }}

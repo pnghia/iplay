@@ -53,7 +53,7 @@ function Login({ classes, history }) {
   return (
     <div className={classes.main}>
       <CssBaseline />
-      <img style={{width: 120}} alt='iplay' src={`${process.env.PUBLIC_URL}/img/97pay-logo.png`} />
+      <img style={{width: 120}} alt='iplay' src={`${process.env.PUBLIC_URL}/icon/97Pay-icon.png`} />
       <form onSubmit={handleSubmit} className={classes.form}>
         <TextInput input={username} label='Enter Mobile No' />
         <TextInput input={password} type='password' label='Enter Password' />

@@ -1,6 +1,5 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState } from 'react'
-import { reduce } from 'ramda'
 import {
   AppBar,
   Button,
@@ -10,13 +9,9 @@ import {
   FormControlLabel,
   FormLabel,
   IconButton,
-  InputLabel,
-  MenuItem,
   Radio,
   RadioGroup,
-  Select,
   Snackbar,
-  TextField,
   Toolbar,
   Typography
 } from '@material-ui/core'
@@ -24,18 +19,21 @@ import {
 import Sidebar from 'component/drawer'
 import Bottom from 'component/bottom'
 import { withStyles } from '@material-ui/core/styles'
-import { useField, useForm } from 'react-final-form-hooks'
+import { useForm } from 'react-final-form-hooks'
 import Joi from 'joi'
 import http from 'service/http'
 import { PropagateLoader } from 'react-spinners'
 import store from 'store'
 import { Close as CloseIcon, Menu, Notifications } from '@material-ui/icons'
+import validate from 'service/form/validation'
+import formCreateInputs from 'service/form/create'
+import TextInput from 'component/textInput'
+import SelectInput from 'component/selectInput'
 import styles from './style'
 import useLoading from '../loading/hook'
 
 function Deposit({ classes, history }) {
   const [loading, withLoading] = useLoading(false)
-  const [openGameSelector, setOpenGameSelector] = useState(false)
   const [msgTrans, setMsgTrans] = useState('')
   const [drawer, toggleDrawer] = useState(false)
   const [openSnackbarError, setOpenSnackbarError] = React.useState(false)
@@ -84,41 +82,15 @@ function Deposit({ classes, history }) {
       .required()
   })
 
-  const validate = values => {
-    return Joi.validate(values, schema, err => {
-      if (!err) {
-        return {}
-      }
-      const generateErr = (accumulator, { message, path: [name] }) => {
-        return {
-          ...accumulator,
-          [name]: message
-        }
-      }
-      const error = reduce(generateErr, {}, err.details)
-      return error
-    })
-  }
-
   const { form, handleSubmit, submitting } = useForm({
     onSubmit,
-    validate,
+    validate: validate(schema),
     initialValues: {
       transferType: 'in'
     }
   })
 
-  function handleCloseGameSelector() {
-    setOpenGameSelector(false)
-  }
-
-  function handleOpenGameSelector() {
-    setOpenGameSelector(true)
-  }
-
-  const transferType = useField('transferType', form)
-  const game = useField('game', form)
-  const amount = useField('amount', form)
+  const [transferType, game, amount] = formCreateInputs(['transferType', 'game', 'amount'], form)
 
   return (
     <div className={classes.root}>
@@ -167,7 +139,8 @@ function Deposit({ classes, history }) {
                 <FormControlLabel value='out' control={<Radio color="primary" />} label="Transfer Out" />
               </RadioGroup>
           </FormControl>
-          <FormControl margin="normal" required fullWidth>
+          <SelectInput input={game} options={[{title: '918 Kiss', value: '2'}]} label='Select Game' />
+          {/* <FormControl margin="normal" required fullWidth>
               <InputLabel htmlFor="demo-controlled-open-select">Select Games</InputLabel>
               <Select
                 open={openGameSelector}
@@ -184,13 +157,8 @@ function Deposit({ classes, history }) {
             {game.meta.touched && game.meta.error && (
               <div className={classes.error}>{game.meta.error}</div>
             )}
-          </FormControl>
-          <FormControl margin="normal" required fullWidth>
-            <TextField {...amount.input} label="Amount" fullWidth />
-            {amount.meta.touched && amount.meta.error && (
-              <div className={classes.error}>{amount.meta.error}</div>
-            )}
-          </FormControl>
+          </FormControl> */}
+          <TextInput input={amount} label='Please Enter amount' />
           {loading ? (
             <div
               style={{ display: 'flex', justifyContent: 'center', margin: 15 }}

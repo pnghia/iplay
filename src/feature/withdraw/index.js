@@ -1,24 +1,23 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState } from 'react'
-import { reduce } from 'ramda'
 import {
   AppBar,
   Button,
   CssBaseline,
   Drawer,
-  FormControl,
   IconButton,
   Snackbar,
   SnackbarContent,
-  TextField,
   Toolbar,
   Typography
 } from '@material-ui/core'
-
+import validate from 'service/form/validation'
+import formCreateInputs from 'service/form/create'
+import TextInput from 'component/textInput'
 import Sidebar from 'component/drawer'
 import Bottom from 'component/bottom'
 import { withStyles } from '@material-ui/core/styles'
-import { useField, useForm } from 'react-final-form-hooks'
+import { useForm } from 'react-final-form-hooks'
 import Joi from 'joi'
 import http from 'service/http'
 import { PropagateLoader } from 'react-spinners'
@@ -77,32 +76,13 @@ function Withdraw({ classes, history }) {
       .required()
   })
 
-  const validate = values => {
-    return Joi.validate(values, schema, err => {
-      if (!err) {
-        return {}
-      }
-      const generateErr = (accumulator, { message, path: [name] }) => {
-        return {
-          ...accumulator,
-          [name]: message
-        }
-      }
-      const error = reduce(generateErr, {}, err.details)
-      return error
-    })
-  }
-
   const { form, handleSubmit, submitting } = useForm({
     onSubmit,
-    validate
+    validate: validate(schema)
   })
 
-  const bankName = useField('bankName', form)
-  const bankAccountName = useField('bankAccountName', form)
-  const bankAccountNo = useField('bankAccountNo', form)
-  const amount = useField('amount', form)
-
+  const [bankName, bankAccountName, bankAccountNo, amount] = formCreateInputs(['bankName', 'bankAccountName', 'bankAccountNo', 'amount'], form)
+  
   function MySnackbarContentWrapper(props) {
     const { className, message, onClose, variant, ...other } = props
     return (
@@ -166,30 +146,10 @@ function Withdraw({ classes, history }) {
         <CssBaseline />
           {/* <img style={{width: 120}} src={`${process.env.PUBLIC_URL}/img/97pay-logo.png`} /> */}
           <form onSubmit={handleSubmit} className={classes.form}>
-            <FormControl margin="normal" required fullWidth>
-              <TextField {...bankName.input} label="Please Enter Bank Name (full)" fullWidth />
-              {bankName.meta.touched && bankName.meta.error && (
-                <div className={classes.error}>{bankName.meta.error}</div>
-              )}
-            </FormControl>
-            <FormControl margin="normal" required fullWidth>
-              <TextField {...bankAccountName.input} label="Please Enter Bank Account Name" fullWidth />
-              {bankAccountName.meta.touched && bankAccountName.meta.error && (
-                <div className={classes.error}>{bankAccountName.meta.error}</div>
-              )}
-            </FormControl>
-            <FormControl margin="normal" required fullWidth>
-              <TextField {...bankAccountNo.input} label="Please Enter Bank Account No" fullWidth />
-              {bankAccountNo.meta.touched && bankAccountNo.meta.error && (
-                <div className={classes.error}>{bankAccountNo.meta.error}</div>
-              )}
-            </FormControl>
-            <FormControl margin="normal" required fullWidth>
-              <TextField {...amount.input} label="Please Enter Withdraw Amount" fullWidth />
-              {amount.meta.touched && amount.meta.error && (
-                <div className={classes.error}>{amount.meta.error}</div>
-              )}
-            </FormControl>
+            <TextInput input={bankName} label='Please Enter Bank Name (full)' />
+            <TextInput input={bankAccountName} label='Please Enter Bank Account Name' />
+            <TextInput input={bankAccountNo} label='Please Enter Bank Account No' />
+            <TextInput input={amount} label='Please Enter Withdraw Amount' />
             {loading ? (
               <div
                 style={{ display: 'flex', justifyContent: 'center', margin: 15 }}
@@ -210,6 +170,7 @@ function Withdraw({ classes, history }) {
                 disabled={submitting}
                 className={classes.submit}
               >
+                <img alt='iplay' style={{width: 30, marginRight: 15}} src={`${process.env.PUBLIC_URL}/icon/icon-withdraw.svg`} />
                 <Typography variant="button" color="inherit" className={classes.button}>
                   WITHDRAW NOW
                 </Typography>
