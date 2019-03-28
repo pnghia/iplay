@@ -1,19 +1,11 @@
 /* eslint-disable react/jsx-no-target-blank */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState } from 'react'
+import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import {
-  AppBar,
-  Drawer,
-  IconButton,
-  Toolbar,
-  Typography
-} from '@material-ui/core'
 import { Carousel } from 'react-bootstrap'
-import { Menu, Notifications } from '@material-ui/icons'
 import { map } from 'ramda'
-import Sidebar from 'component/drawer'
 import Bottom from 'component/bottom'
+import Header from 'component/header'
 import initialData from './constant'
 import styles from './style'
 import './style.css'
@@ -49,45 +41,10 @@ const topControll = [
 
 function home({ history, classes }) {
 
-  const [drawer, toggleDrawer] = useState(false)
-
-  const onToggleDrawer = status => () => {
-    toggleDrawer(status)
-  }
-
 
   return (
     <div className={classes.root}>
-      <Drawer open={drawer} onClose={onToggleDrawer(false)}>
-        <div
-          tabIndex={0}
-          role="button"
-          onClick={onToggleDrawer(false)}
-          onKeyDown={onToggleDrawer(false)}
-        >
-          <Sidebar history={history} />
-        </div>
-      </Drawer>
-      <AppBar>
-        <Toolbar>
-          <IconButton
-            onClick={onToggleDrawer(true)}
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="Menu"
-          >
-            <Menu />
-          </IconButton>
-          <Typography variant="title" color="inherit" className={classes.header} style={{textAlign: 'center', fontWeight: 'bold'}}>
-            Home
-          </Typography>
-          <div>
-            <IconButton color="inherit">
-              <Notifications />
-            </IconButton>
-          </div>
-        </Toolbar>
-      </AppBar>
+      <Header history={history} title='Home' />
       <Carousel className={classes.container}>
         {
           map(({ img }) => (

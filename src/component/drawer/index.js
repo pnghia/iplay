@@ -24,6 +24,11 @@ const topSidebar = [
     icon: <img style={{width: 40}} src={`${process.env.PUBLIC_URL}/icon/icon-home.svg`} />
   },
   {
+    title: 'Account',
+    route: '/account',
+    icon: <img style={{width: 40}} src={`${process.env.PUBLIC_URL}/icon/login.png`} />
+  },
+  {
     title: 'Transfer',
     route: 'transfer',
     icon: <img style={{width: 40}} src={`${process.env.PUBLIC_URL}/icon/icon-transfer.svg`} />

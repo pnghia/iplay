@@ -15,7 +15,7 @@ import store from 'store'
 import styles from './style'
 import useLoading from '../loading/hook'
 
-function Login({ classes, history }) {
+function Login({ classes, history, callback }) {
   const [loading, withLoading] = useLoading(false)
 
   const toRegister = () => history.push('register')
@@ -30,6 +30,9 @@ function Login({ classes, history }) {
       store.set('token', token)
       store.set('user', user)
       history.push('home')
+      if(callback) {
+        callback()
+      }
     } catch (error) {
       throw error
     }
