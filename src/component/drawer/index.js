@@ -3,8 +3,7 @@ import React from 'react'
 import {
   Divider,
   List,
-  ListItem,
-  ListItemText
+  ListItem
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import store from 'store'
@@ -43,6 +42,21 @@ const topSidebar = [
     title: 'Profile',
     route: 'change-password',
     icon: <img style={{width: 40}} src={`${process.env.PUBLIC_URL}/icon/icon-profile.svg`} />
+  },
+  {
+    title: 'Live Casino',
+    route: 'change-password',
+    icon: <img style={{width: 40}} src="https://www.95asia.com/v2/img/sidemenu/lc.png" />
+  },
+  {
+    title: 'Slots',
+    route: 'change-password',
+    icon: <img style={{width: 40}} src="https://www.95asia.com/v2/img/sidemenu/slot.png" />
+  },
+  {
+    title: 'Lottery',
+    route: 'change-password',
+    icon: <img style={{width: 40}} src="https://www.95asia.com/v2/img/sidemenu/lottery.png" />
   }
 ]
 
@@ -66,7 +80,7 @@ function sideList({ history }) {
         <ListItem button onClick={() => { history.push('login'); store.clearAll()}}>
           <div style={{textAlign: 'center', width: '100%'}}>
             <img style={{width: 40}} src={`${process.env.PUBLIC_URL}/icon/icon-logout.svg`} />
-            <span style={{color: '#fff', display: 'block'}}>Logout</span>
+            <span style={{color: '#fff', display: 'block', fontSize: 12}}>Logout</span>
           </div>
         </ListItem>
       </List>
