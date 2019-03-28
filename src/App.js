@@ -40,11 +40,11 @@ function AuthExample() {
         <div>
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
-          <PrivateRoute path="/home" component={Home} />
+          <Route path="/home" component={Home} />
           <PrivateRoute path="/deposit" component={Deposit} />
           <PrivateRoute path="/withdraw" component={Withdraw} />
           <PrivateRoute path="/transfer" component={Transfer} />
-          <PrivateRoute exact path="/" component={Home} />
+          <Route exact path="/" component={Home} />
         </div>
       </Router>
     </MuiThemeProvider>
