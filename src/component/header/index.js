@@ -17,6 +17,7 @@ import './style.css'
 
 function Header({ history, title }) {
   const user = store.get('user')
+  const token = store.get('token')
   const [state, setState] = useState({
     top: false,
     left: false,
@@ -63,7 +64,7 @@ function Header({ history, title }) {
             {title}
           </Typography>
           <div>
-            <IconButton color="inherit" onClick={!user ? onToggleDrawer('right', true) : () => history.push('account')}>
+            <IconButton color="inherit" onClick={!user || !token ? onToggleDrawer('right', true) : () => history.push('account')}>
               <img style={{width: 30}} src={`${process.env.PUBLIC_URL}/icon/login.png`} />
             </IconButton>
           </div>

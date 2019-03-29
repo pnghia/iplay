@@ -1,12 +1,15 @@
 /* eslint-disable no-restricted-globals */
 import axios from 'axios'
 import config from 'config'
+import store from 'store'
 
 function handleErrors(response) {
   if (response.status === 401) {
-    location.href = '/login'
-}
-return response
+    store.clearAll()
+    location.href = '/'
+    throw response
+  }
+  return response
 }
 
 export default {
