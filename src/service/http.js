@@ -6,7 +6,7 @@ import store from 'store'
 function handleErrors(response) {
   if (response.status === 401) {
     store.clearAll()
-    location.href = '/'
+    location.href = '/?loginSidebar=true'
     throw response
   }
   return response

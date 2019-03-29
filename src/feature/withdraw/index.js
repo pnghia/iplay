@@ -1,20 +1,16 @@
 /* eslint-disable jsx-a11y/alt-text */
-import React, { useState } from 'react'
+import React from 'react'
 import {
-  AppBar,
   Button,
   CssBaseline,
-  Drawer,
   IconButton,
   Snackbar,
   SnackbarContent,
-  Toolbar,
   Typography
 } from '@material-ui/core'
 import validate from 'service/form/validation'
 import formCreateInputs from 'service/form/create'
 import TextInput from 'component/textInput'
-import Sidebar from 'component/drawer'
 import Bottom from 'component/bottom'
 import { withStyles } from '@material-ui/core/styles'
 import { useForm } from 'react-final-form-hooks'
@@ -22,13 +18,13 @@ import Joi from 'joi'
 import http from 'service/http'
 import { PropagateLoader } from 'react-spinners'
 import store from 'store'
-import { Close, Menu, Notifications } from '@material-ui/icons'
+import Header from 'component/header'
+import { Close } from '@material-ui/icons'
 import styles from './style'
 import useLoading from '../loading/hook'
 
 function Withdraw({ classes, history }) {
   const [loading, withLoading] = useLoading(false)
-  const [drawer, toggleDrawer] = useState(false)
   const [openSnackbar, setOpenSnackbar] = React.useState(false)
 
   function handleCloseSnackbar(event, reason) {
@@ -36,9 +32,6 @@ function Withdraw({ classes, history }) {
       return
     }
     setOpenSnackbar(false)
-  }
-  const onToggleDrawer = status => () => {
-    toggleDrawer(status)
   }
 
   const onSubmit = async payload => {
@@ -112,39 +105,9 @@ function Withdraw({ classes, history }) {
 
   return (
     <div className={classes.root}>
-      <Drawer open={drawer} onClose={onToggleDrawer(false)}>
-        <div
-          tabIndex={0}
-          role="button"
-          onClick={onToggleDrawer(false)}
-          onKeyDown={onToggleDrawer(false)}
-        >
-          <Sidebar history={history} />
-        </div>
-      </Drawer>
-      <AppBar>
-        <Toolbar>
-          <IconButton
-            onClick={onToggleDrawer(true)}
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="Menu"
-          >
-            <Menu />
-          </IconButton>
-          <Typography variant="title" color="inherit" className={classes.header} style={{textAlign: 'center', fontWeight: 'bold'}}>
-            Withdraw
-          </Typography>
-          <div>
-            <IconButton color="inherit">
-              <Notifications />
-            </IconButton>
-          </div>
-        </Toolbar>
-      </AppBar>
+      <Header history={history} title='Withdraw'/>
       <div className={classes.container}>
         <CssBaseline />
-          {/* <img style={{width: 120}} src={`${process.env.PUBLIC_URL}/img/97pay-logo.png`} /> */}
           <form onSubmit={handleSubmit} className={classes.form}>
             <TextInput input={bankName} label='Please Enter Bank Name (full)' />
             <TextInput input={bankAccountName} label='Please Enter Bank Account Name' />

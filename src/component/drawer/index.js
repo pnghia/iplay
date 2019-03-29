@@ -72,7 +72,7 @@ function sideList({ history }) {
     <div className={classes.root}>
       <List>
         {map(({ title, route, icon }) => (
-          <React.Fragment>
+          <React.Fragment key={title}>
             <ListItem button key={title} onClick={() => history.push(route)}>
               <div style={{textAlign: 'center', width: '100%'}}>
                 {icon}
@@ -82,7 +82,7 @@ function sideList({ history }) {
             <Divider />
           </React.Fragment>
         ), topSidebar)}
-        <ListItem button onClick={() => { history.push('login'); store.clearAll()}}>
+        <ListItem button onClick={() => { history.push('/'); store.clearAll()}}>
           <div style={{textAlign: 'center', width: '100%'}}>
             <img style={{width: 40}} src={`${process.env.PUBLIC_URL}/icon/icon-logout.svg`} />
             <span style={{color: '#fff', display: 'block', fontSize: 12}}>Logout</span>

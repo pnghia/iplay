@@ -15,17 +15,18 @@ import Sidebar from 'component/drawer'
 import Login from 'feature/login'
 import './style.css'
 
-function Header({ history, title }) {
+function Header({ history, title , rightSidebar = false}) {
   const user = store.get('user')
   const token = store.get('token')
   const [state, setState] = useState({
     top: false,
     left: false,
     bottom: false,
-    right: false,
+    right: rightSidebar,
   })
 
   const onToggleDrawer = (side, open) => () => {
+    history.push(history.location.pathname)
     setState({ ...state, [side]: open })
   }
 

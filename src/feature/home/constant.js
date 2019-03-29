@@ -40,5 +40,27 @@ export default {
         label: '28 Win'
       }]
     }
+  ],
+  topControll: [
+    {
+      title: 'Sports',
+      src: 'https://www.95asia.com/v2/img/sports.png'
+    },
+    {
+      title: 'Live Casino',
+      src: 'https://www.95asia.com/v2/img/lc.png'
+    },
+    {
+      title: 'Slots',
+      src: 'https://www.95asia.com/v2/img/slot.png'
+    },
+    {
+      title: 'Lottery',
+      src: 'https://www.95asia.com/v2/img/lot.png'
+    },
+    {
+      title: 'Promotions',
+      src: 'https://www.95asia.com/v2/img/promo.png'
+    },
   ]
 }

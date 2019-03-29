@@ -1,10 +1,8 @@
 /* eslint-disable jsx-a11y/alt-text */
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
-  AppBar,
   Button,
   CssBaseline,
-  Drawer,
   FormControl,
   FormControlLabel,
   FormLabel,
@@ -12,48 +10,50 @@ import {
   Radio,
   RadioGroup,
   Snackbar,
-  Toolbar,
-  Typography
 } from '@material-ui/core'
-
-import Sidebar from 'component/drawer'
 import Bottom from 'component/bottom'
-import { withStyles } from '@material-ui/core/styles'
+import { withStyles, MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 import { useForm } from 'react-final-form-hooks'
 import Joi from 'joi'
 import http from 'service/http'
 import { PropagateLoader } from 'react-spinners'
 import store from 'store'
-import { Close as CloseIcon, Menu, Notifications } from '@material-ui/icons'
+import { Close as CloseIcon } from '@material-ui/icons'
 import validate from 'service/form/validation'
 import formCreateInputs from 'service/form/create'
 import TextInput from 'component/textInput'
 import SelectInput from 'component/selectInput'
+import Header from 'component/header'
 import styles from './style'
 import useLoading from '../loading/hook'
+import './style.css'
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#ffaf50'
+    },
+  },
+  typography: { useNextVariants: true },
+})
 
 function Deposit({ classes, history }) {
   const [loading, withLoading] = useLoading(false)
+  const [games, updateGames] = useState([])
   const [msgTrans, setMsgTrans] = useState('')
-  const [drawer, toggleDrawer] = useState(false)
   const [openSnackbarError, setOpenSnackbarError] = React.useState(false)
 
   function handleCloseSnackbarError(event, reason) {
     if (reason === 'clickaway') {
       return
     }
-
     setOpenSnackbarError(false)
-  }
-
-  const onToggleDrawer = status => () => {
-    toggleDrawer(status)
   }
 
   const onSubmit = async payload => {
     try {
       const { user_id: userId } = store.get('user')
-      const path = payload.transferType === 'in' ? `/users/${userId}/game/${payload.game}/deposit` : `/users/${userId}/game/${payload.game}/withdraw`
+      const path = payload.transferType === 'in' ? `users/${userId}/game/${payload.game}/deposit` : `users/${userId}/game/${payload.game}/withdraw`
       const { statusCode, message } = await withLoading(() =>
         http.post({ path, payload: {
           amount: payload.amount
@@ -75,7 +75,7 @@ function Deposit({ classes, history }) {
   const schema = Joi.object().keys({
     transferType: Joi.string()
       .required(),
-    game: Joi.string()
+    game: Joi.number()
       .required(),
     amount: Joi.number()
       .min(50)
@@ -90,74 +90,38 @@ function Deposit({ classes, history }) {
     }
   })
 
+  const fetchData = async () => {
+    const correctGameProps = ({ name, id: value }) => ({ title: name, value })
+    const gamesResp = await http.get({ path: 'games' })
+    updateGames(gamesResp.map(correctGameProps))
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [])
+
   const [transferType, game, amount] = formCreateInputs(['transferType', 'game', 'amount'], form)
 
   return (
     <div className={classes.root}>
-      <Drawer open={drawer} onClose={onToggleDrawer(false)}>
-        <div
-          tabIndex={0}
-          role="button"
-          onClick={onToggleDrawer(false)}
-          onKeyDown={onToggleDrawer(false)}
-        >
-          <Sidebar history={history} />
-        </div>
-      </Drawer>
-      <AppBar>
-        <Toolbar>
-          <IconButton
-            onClick={onToggleDrawer(true)}
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="Menu"
-          >
-            <Menu />
-          </IconButton>
-          <Typography variant="title" color="inherit" className={classes.header} style={{textAlign: 'center', fontWeight: 'bold'}}>
-            Transfer
-          </Typography>
-          <div>
-            <IconButton color="inherit">
-              <Notifications />
-            </IconButton>
-          </div>
-        </Toolbar>
-      </AppBar>
+      <Header history={history} title='Transfer'/>
       <div className={classes.container}>
         <CssBaseline />
-          {/* <img style={{width: 120}} src={`${process.env.PUBLIC_URL}/img/97pay-logo.png`} /> */}
           <form onSubmit={handleSubmit} className={classes.form}>
-            <FormControl margin="normal" required fullWidth>
-              <FormLabel component="legend">Transfer type</FormLabel>
-              <RadioGroup
-                aria-label="transfer"
-                name="transfer"
-                {...transferType.input}
-              >
-                <FormControlLabel value='in' control={<Radio color="primary" />} label="Transfer In" />
-                <FormControlLabel value='out' control={<Radio color="primary" />} label="Transfer Out" />
-              </RadioGroup>
-          </FormControl>
-          <SelectInput input={game} options={[{title: '918 Kiss', value: '2'}]} label='Select Game' />
-          {/* <FormControl margin="normal" required fullWidth>
-              <InputLabel htmlFor="demo-controlled-open-select">Select Games</InputLabel>
-              <Select
-                open={openGameSelector}
-                onClose={handleCloseGameSelector}
-                onOpen={handleOpenGameSelector}
-                {...game.input}
-                inputProps={{
-                  name: 'game',
-                  id: 'demo-controlled-open-select',
-                }}
-              >
-              <MenuItem value='2'>918 kiss</MenuItem>
-            </Select>
-            {game.meta.touched && game.meta.error && (
-              <div className={classes.error}>{game.meta.error}</div>
-            )}
-          </FormControl> */}
+            <MuiThemeProvider theme={theme}>
+              <FormControl margin="normal" required fullWidth>
+                <FormLabel style={{color: '#ffaf50'}} component="legend">Transfer type</FormLabel>
+                <RadioGroup
+                  aria-label="transfer"
+                  name="transfer"
+                  {...transferType.input}
+                >
+                  <FormControlLabel value='in' control={<Radio color="primary" />} label="Transfer In" />
+                  <FormControlLabel value='out' control={<Radio color="primary" />} label="Transfer Out" />
+                </RadioGroup>
+              </FormControl>
+            </MuiThemeProvider>
+          <SelectInput input={game} options={games} label='Select Game' />
           <TextInput input={amount} label='Please Enter amount' />
           {loading ? (
             <div

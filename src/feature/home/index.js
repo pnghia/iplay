@@ -6,6 +6,7 @@ import { Carousel } from 'react-bootstrap'
 import { map } from 'ramda'
 import Bottom from 'component/bottom'
 import Header from 'component/header'
+import queryString from 'query-string'
 import initialData from './constant'
 import styles from './style'
 import './style.css'
@@ -16,35 +17,13 @@ const slides = [
   }
 ]
 
-const topControll = [
-  {
-    title: 'Sports',
-    src: 'https://www.95asia.com/v2/img/sports.png'
-  },
-  {
-    title: 'Live Casino',
-    src: 'https://www.95asia.com/v2/img/lc.png'
-  },
-  {
-    title: 'Slots',
-    src: 'https://www.95asia.com/v2/img/slot.png'
-  },
-  {
-    title: 'Lottery',
-    src: 'https://www.95asia.com/v2/img/lot.png'
-  },
-  {
-    title: 'Promotions',
-    src: 'https://www.95asia.com/v2/img/promo.png'
-  },
-]
-
 function home({ history, classes }) {
-
+  const { location: { search } } = history
+  const { loginSidebar } = queryString.parse(search)
 
   return (
     <div className={classes.root}>
-      <Header history={history} title='Home' />
+      <Header history={history} title='Home' rightSidebar={Boolean(loginSidebar)} />
       <Carousel className={classes.container}>
         {
           map(({ img }) => (
@@ -55,26 +34,29 @@ function home({ history, classes }) {
         }
       </Carousel>
       <div className={classes.gridroot}>
-        {topControll.map(({ src, title }) =>
-          <div className={classes.gridList} cols={2.5}>
+        {initialData.topControll.map(({ src, title }) =>
+          <div key={title} className={classes.gridList} cols={2.5}>
             <img style={{width: 40, height: 40}} src={src} alt='97ipay' />
             <p>{title}</p>
           </div>)
         }
       </div>
       {initialData.bodyContents.map(({ chils, title }) =>
-        <div className={classes.bodyContentsRoot}>
+        <div key={title} className={classes.bodyContentsRoot}>
           <React.Fragment>
             <div className={classes.bodyTitle}>
               {title}
             </div>
             <div className={classes.childroot}>
-              {chils.map(({src, label}) => 
-                <div className={classes.bodyList} cols={2.5}>
+              <div className={classes.bodyList} >
+                <p>COMMING SOON</p>
+              </div>
+              {/* {chils.map(({src, label}) => 
+                <div key={label} className={classes.bodyList} cols={2.5}>
                   <img style={{width: '100%'}} src={src} alt='97ipay' />
                   <p>{label}</p>
                 </div>
-              )}
+              )} */}
             </div>
           </React.Fragment>
         </div>

@@ -1,44 +1,50 @@
-/* eslint-disable camelcase */
-/* eslint-disable jsx-a11y/alt-text */
 import React, { useRef, useState } from 'react'
-import { reduce } from 'ramda'
 import {
-  AppBar,
   Button,
   Checkbox,
   CssBaseline,
-  Drawer,
-  FormControl,
-  FormControlLabel,
-  IconButton,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-  Toolbar,
-  Typography,
+  FormControlLabel
 } from '@material-ui/core'
-
-import Sidebar from 'component/drawer'
+import Header from 'component/header'
 import Bottom from 'component/bottom'
 import { withStyles } from '@material-ui/core/styles'
-import { useField, useForm } from 'react-final-form-hooks'
+import { useForm } from 'react-final-form-hooks'
+import validate from 'service/form/validation'
+import formCreateInputs from 'service/form/create'
+import TextInput from 'component/textInput'
+import SelectInput from 'component/selectInput'
 import Joi from 'joi'
 import http from 'service/http'
 import { PropagateLoader } from 'react-spinners'
 import store from 'store'
-import { Menu, Notifications } from '@material-ui/icons'
 import styles from './style'
 import useLoading from '../loading/hook'
+import './style.css'
+
+const avaiableBanking = [{
+  title: 'CIMB Bank',
+  value: 'CIMB'
+},
+{
+  title: 'Hong Leong Bank',
+  value: 'HLB'
+},
+{
+  title: 'Maybank Berhad',
+  value: 'MBB'
+},
+{
+  title: 'Public Bank',
+  value: 'PBB'
+},
+{
+  title: 'RHB',
+  value: 'RHB'
+}]
 
 function Deposit({ classes, history }) {
   const [loading, withLoading] = useLoading(false)
-  const [open, setOpen] = React.useState(false)
-  const [drawer, toggleDrawer] = useState(false)
   const formPayment = useRef(null)
-  const onToggleDrawer = status => () => {
-    toggleDrawer(status)
-  }
 
   const [backendUrl, setBackendUrl]  = useState()
   const [currency, setCurrency] = useState()
@@ -80,104 +86,23 @@ function Deposit({ classes, history }) {
       .required()
   })
 
-  const validate = values => {
-    return Joi.validate(values, schema, err => {
-      if (!err) {
-        return {}
-      }
-      const generateErr = (accumulator, { message, path: [name] }) => {
-        return {
-          ...accumulator,
-          [name]: message
-        }
-      }
-      const error = reduce(generateErr, {}, err.details)
-      return error
-    })
-  }
-
   const { form, handleSubmit, submitting } = useForm({
     onSubmit,
-    validate
+    validate: validate(schema)
   })
 
-  function handleClose() {
-    setOpen(false)
-  }
-
-  function handleOpen() {
-    setOpen(true)
-  }
-
-  const bankCode = useField('bankCode', form)
-  const amount = useField('amount', form)
+  const [bankCode, amount] = formCreateInputs(['bankCode', 'amount'], form)
 
   return (
     <div className={classes.root}>
-      <Drawer open={drawer} onClose={onToggleDrawer(false)}>
-        <div
-          tabIndex={0}
-          role="button"
-          onClick={onToggleDrawer(false)}
-          onKeyDown={onToggleDrawer(false)}
-        >
-          <Sidebar history={history} />
-        </div>
-      </Drawer>
-      <AppBar>
-        <Toolbar>
-          <IconButton
-            onClick={onToggleDrawer(true)}
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="Menu"
-          >
-            <Menu />
-          </IconButton>
-          <Typography variant="title" color="inherit" className={classes.header} style={{textAlign: 'center', fontWeight: 'bold'}}>
-            Top up
-          </Typography>
-          <div>
-            <IconButton color="inherit">
-              <Notifications />
-            </IconButton>
-          </div>
-        </Toolbar>
-      </AppBar>
+      <Header history={history} title='Top up'/>
       <div className={classes.container}>
         <CssBaseline />
-          {/* <img style={{width: 120}} src={`${process.env.PUBLIC_URL}/img/97pay-logo.png`} /> */}
           <form onSubmit={handleSubmit} className={classes.form}>
-            <FormControl margin="normal" required fullWidth>
-              <InputLabel htmlFor="demo-controlled-open-select">Select bank</InputLabel>
-              <Select
-                open={open}
-                onClose={handleClose}
-                onOpen={handleOpen}
-                {...bankCode.input}
-                inputProps={{
-                  name: 'bankCode',
-                  id: 'demo-controlled-open-select',
-                }}
-              >
-              <MenuItem value='CIMB'>CIMB Bank</MenuItem>
-              <MenuItem value='HLB'>Hong Leong Bank</MenuItem>
-              <MenuItem value='MBB'>Maybank Berhad</MenuItem>
-              <MenuItem value='PBB'>Public Bank</MenuItem>
-              <MenuItem value='RHB'>RHB</MenuItem>
-            </Select>
-            {bankCode.meta.touched && bankCode.meta.error && (
-              <div className={classes.error}>{bankCode.meta.error}</div>
-            )}
-          </FormControl>
-          <FormControl margin="normal" required fullWidth>
-            <TextField {...amount.input} label="Amount" fullWidth />
-            {amount.meta.touched && amount.meta.error && (
-              <div className={classes.error}>{amount.meta.error}</div>
-            )}
-          </FormControl>
+            <SelectInput input={bankCode} options={avaiableBanking} label='Select bank' />
+            <TextInput input={amount} label='Please Enter amount' />
           <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
+            control={<Checkbox style={{color: '#ffaf50'}} value="remember" color="primary" />}
             label="I agree to terms and conditions"
           />
           {loading ? (

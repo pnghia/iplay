@@ -53,8 +53,11 @@ const Input = ({options, classes, input: { input, meta }, label, ...rest }) => {
   return (
     <FormControl margin="normal" required fullWidth>
       <MuiThemeProvider theme={theme}>
-        <InputLabel htmlFor="demo-controlled-open-select">{label}</InputLabel>
+        <InputLabel
+          style={{ color: '#ffaf50' }}
+          htmlFor="demo-controlled-open-select">{label}</InputLabel>
         <Select
+          style={{ color: '#ffaf50', borderColor: '#ffaf50' }}
           className={classes.select}
           open={openGameSelector}
           onClose={handleCloseGameSelector}
@@ -74,17 +77,6 @@ const Input = ({options, classes, input: { input, meta }, label, ...rest }) => {
         <div style={{ color: '#dc3545', marginTop: 5 }}>{meta.error}</div>
       )}
     </FormControl>
-    // <FormControl margin="normal" required fullWidth>
-    //   <MuiThemeProvider theme={theme}>
-    //     <TextField {...input} label={label} {...rest} fullWidth InputProps={{
-    //       classes: {underline: classes.underline},
-    //       className: classes.input
-    //     }} InputLabelProps={{className: classes.label}}/>
-    //   </MuiThemeProvider>
-    //   {meta.touched && meta.error && (
-    //     <div style={{ color: '#dc3545', marginTop: 5 }}>{meta.error}</div>
-    //   )}
-    // </FormControl>
   )
 }
 
