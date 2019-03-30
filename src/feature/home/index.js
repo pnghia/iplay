@@ -48,15 +48,14 @@ function home({ history, classes }) {
               {title}
             </div>
             <div className={classes.childroot}>
-              <div className={classes.bodyList} >
-                <p>COMMING SOON</p>
-              </div>
-              {/* {chils.map(({src, label}) => 
+              {chils.length ? chils.map(({src, label}) => 
                 <div key={label} className={classes.bodyList} cols={2.5}>
                   <img style={{width: '100%'}} src={src} alt='97ipay' />
                   <p>{label}</p>
                 </div>
-              )} */}
+              ) : <div className={classes.bodyList} >
+              <p>COMMING SOON</p>
+            </div>}
             </div>
           </React.Fragment>
         </div>

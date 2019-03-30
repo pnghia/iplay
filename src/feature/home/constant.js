@@ -2,43 +2,26 @@ export default {
   bodyContents: [
     {
       title: 'Sports',
-      chils: [{
-        src: 'https://www.95asia.com/v2/img/items/maxbet.jpg',
-        label: 'Maxbet'
-      },
-      {
-        src: 'https://www.95asia.com/v2/img/items/wft.jpg',
-        label: 'WiningFT'
-      },]
+      chils: []
     },
     {
       title: 'Live Casino',
-      chils: [{
-        src: 'https://www.95asia.com/v2/img/items/lc_plt.jpg',
-        label: 'Playtech'
-      },
-      {
-        src: 'https://www.95asia.com/v2/img/items/lc_alb.jpg',
-        label: 'Allbet'
-      },]
+      chils: []
     },
     {
       title: 'Slots',
       chils: [{
-        src: 'https://www.95asia.com/v2/img/items/plt.jpg',
-        label: 'Playtech'
+        src: '/img/home/1.jpeg',
+        label: 'ACE333'
       },
       {
-        src: 'https://www.95asia.com/v2/img/items/mw.jpg',
-        label: 'Megawin'
+        src: '/img/home/2.png',
+        label: '918 Kiss'
       },]
     },
     {
       title: 'Lottery',
-      chils: [{
-        src: 'https://www.95asia.com/v2/img/items/lot.jpg',
-        label: '28 Win'
-      }]
+      chils: []
     }
   ],
   topControll: [
