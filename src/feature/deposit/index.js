@@ -102,6 +102,7 @@ function Deposit({ classes, history }) {
             <SelectInput input={bankCode} options={avaiableBanking} label='Select bank' />
             <TextInput input={amount} label='Please Enter amount' />
           <FormControlLabel
+            className='form-label-control'
             control={<Checkbox style={{color: '#ffaf50'}} value="remember" color="primary" />}
             label="I agree to terms and conditions"
           />

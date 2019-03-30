@@ -1,3 +1,3 @@
 export default {
-  baseUrl: 'https://api.97ipay.com',
+  baseUrl: process.env.REACT_APP_API_BASEURL,
 }

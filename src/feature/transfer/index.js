@@ -116,8 +116,8 @@ function Deposit({ classes, history }) {
                   name="transfer"
                   {...transferType.input}
                 >
-                  <FormControlLabel value='in' control={<Radio color="primary" />} label="Transfer In" />
-                  <FormControlLabel value='out' control={<Radio color="primary" />} label="Transfer Out" />
+                  <FormControlLabel className='form-label-control' value='in' control={<Radio color="primary" />} label="Transfer In" />
+                  <FormControlLabel className='form-label-control' value='out' control={<Radio color="primary" />} label="Transfer Out" />
                 </RadioGroup>
               </FormControl>
             </MuiThemeProvider>
