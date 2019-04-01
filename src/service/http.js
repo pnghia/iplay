@@ -4,12 +4,15 @@ import config from 'config'
 import store from 'store'
 
 function handleErrors(response) {
+  if (response.status === 200) {
+    return response
+  }
   if (response.status === 401) {
     store.clearAll()
     location.href = '/?loginSidebar=true'
-    throw response
   }
-  return response
+  
+  throw response
 }
 
 export default {
@@ -33,17 +36,18 @@ export default {
     path = ''
   }) {
     return fetch(`${config.baseUrl  }/${  path}`, {
-      method: "GET", // *GET, POST, PUT, DELETE, etc.
-      mode: "cors", // no-cors, cors, *same-origin
-      cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-      credentials: "same-origin", // include, *same-origin, omit
+      method: "GET",
+      mode: "cors",
+      cache: "no-cache",
+      credentials: "same-origin",
       headers: this.headers,
-      redirect: "follow", // manual, *follow, error
-      referrer: "no-referrer", // no-referrer, *client
+      redirect: "follow",
+      referrer: "no-referrer",
       // body: JSON.stringify(payload), // body data type must match "Content-Type" header
     })
     .then(handleErrors)
     .then(response => response.json())
+    .catch(async err => {throw await err.json()})
   },
 
   put({
@@ -64,17 +68,18 @@ export default {
     payload
   }) {
     return fetch(`${config.baseUrl  }/${  path}`, {
-      method: "POST", // *GET, POST, PUT, DELETE, etc.
-      mode: "cors", // no-cors, cors, *same-origin
-      cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-      credentials: "same-origin", // include, *same-origin, omit
+      method: "POST",
+      mode: "cors",
+      cache: "no-cache",
+      credentials: "same-origin",
       headers: this.headers,
-      redirect: "follow", // manual, *follow, error
-      referrer: "no-referrer", // no-referrer, *client
-      body: JSON.stringify(payload), // body data type must match "Content-Type" header
+      redirect: "follow",
+      referrer: "no-referrer",
+      body: JSON.stringify(payload),
     })
     .then(handleErrors)
     .then(response => response.json())
+    .catch(async err => {throw await err.json()})
   },
 
   postForm({

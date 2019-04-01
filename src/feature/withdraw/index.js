@@ -22,7 +22,16 @@ import useDialog from '../modal/hook'
 
 function Withdraw({ classes, history }) {
   const [loading, withLoading] = useLoading(false)
-  const [Dialog, showWithMessage] = useDialog({title: 'Withdraw'})
+  
+  const [Dialog, showDialogWithMessage] = useDialog({
+    title: 'Withdraw Successful'
+  })
+
+  const [ErrorDialog, showDialogErrorWithMessage] = useDialog({
+    title: 'Withdraw Error',
+    btnLabel: 'Got it',
+    type: 'error'
+  })
 
   const onSubmit = async payload => {
     try {
@@ -39,9 +48,9 @@ function Withdraw({ classes, history }) {
       await withLoading(() =>
         http.post({ path: `users/${userId}/withdraw`, payload: submited })
       )
-      showWithMessage('Your request submitted successfully')
+      showDialogWithMessage('Your request submitted successfully', () => history.push('/account'))
     } catch (error) {
-      showWithMessage('Something went wrong')
+      showDialogErrorWithMessage(error.message)
     }
   }
 
@@ -56,6 +65,7 @@ function Withdraw({ classes, history }) {
       .label('Bank Account Number')
       .required(),
     amount: Joi.number()
+      // .min(10)
       .required()
   })
 
@@ -106,6 +116,7 @@ function Withdraw({ classes, history }) {
         </div>
       <Bottom history={history} />
       {Dialog}
+      {ErrorDialog}
     </div>
   )
 }

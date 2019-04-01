@@ -5,16 +5,17 @@ import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
-// import withMobileDialog from '@material-ui/core/withMobileDialog'
+import './style.css'
 
 function ResponsiveDialog(props) {
-  const { message, title, btnLabel } = props
+  const { message, title, btnLabel, type } = props
   const [options, upadteOptions] = React.useState({message, title, btnLabel})
 
-  function showWithMessage(msg) {
+  function showWithMessage(msg, callback) {
     upadteOptions({
       ...options,
-      message: msg
+      message: msg,
+      callback
     })
   }
 
@@ -36,14 +37,14 @@ function ResponsiveDialog(props) {
         onClose={handleClose}
         aria-labelledby="responsive-dialog-title"
       >
-        <DialogTitle id="responsive-dialog-title">{title}</DialogTitle>
+        <DialogTitle className={type === 'error' ? 'error' : 'success'} id="responsive-dialog-title">{title}</DialogTitle>
         <DialogContent>
           <DialogContentText>
             {options.message}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary" autoFocus>
+          <Button onClick={options.callback || handleClose} color="primary" autoFocus>
             {btnLabel || 'AGREE'}
           </Button>
         </DialogActions>
