@@ -3,9 +3,6 @@ import React from 'react'
 import {
   Button,
   CssBaseline,
-  IconButton,
-  Snackbar,
-  SnackbarContent,
   Typography
 } from '@material-ui/core'
 import validate from 'service/form/validation'
@@ -19,20 +16,13 @@ import http from 'service/http'
 import { PropagateLoader } from 'react-spinners'
 import store from 'store'
 import Header from 'component/header'
-import { Close } from '@material-ui/icons'
 import styles from './style'
 import useLoading from '../loading/hook'
+import useDialog from '../modal/hook'
 
 function Withdraw({ classes, history }) {
   const [loading, withLoading] = useLoading(false)
-  const [openSnackbar, setOpenSnackbar] = React.useState(false)
-
-  function handleCloseSnackbar(event, reason) {
-    if (reason === 'clickaway') {
-      return
-    }
-    setOpenSnackbar(false)
-  }
+  const [Dialog, showWithMessage] = useDialog({title: 'Withdraw'})
 
   const onSubmit = async payload => {
     try {
@@ -49,9 +39,9 @@ function Withdraw({ classes, history }) {
       await withLoading(() =>
         http.post({ path: `users/${userId}/withdraw`, payload: submited })
       )
-      setOpenSnackbar(true)
+      showWithMessage('Your request submitted successfully')
     } catch (error) {
-      throw error
+      showWithMessage('Something went wrong')
     }
   }
 
@@ -75,33 +65,6 @@ function Withdraw({ classes, history }) {
   })
 
   const [bankName, bankAccountName, bankAccountNo, amount] = formCreateInputs(['bankName', 'bankAccountName', 'bankAccountNo', 'amount'], form)
-  
-  function MySnackbarContentWrapper(props) {
-    const { className, message, onClose, variant, ...other } = props
-    return (
-      <SnackbarContent
-        style={{backgroundColor: '#007DFE'}}
-        aria-describedby="client-snackbar"
-        message={
-          <span id="client-snackbar" className={classes.message}>
-            {message}
-          </span>
-        }
-        action={[
-          <IconButton
-            key="close"
-            aria-label="Close"
-            color="inherit"
-            className={classes.close}
-            onClick={onClose}
-          >
-            <Close className={classes.icon} />
-          </IconButton>,
-        ]}
-        {...other}
-      />
-    )
-  }
 
   return (
     <div className={classes.root}>
@@ -142,22 +105,7 @@ function Withdraw({ classes, history }) {
           </form>
         </div>
       <Bottom history={history} />
-      <Snackbar
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-          backgroundColor: '#007DFE'
-        }}
-        open={openSnackbar}
-        autoHideDuration={6000}
-        onClose={handleCloseSnackbar}
-      >
-        <MySnackbarContentWrapper
-          onClose={handleCloseSnackbar}
-          variant="success"
-          message="Your request submitted successfully"
-        />
-      </Snackbar>
+      {Dialog}
     </div>
   )
 }

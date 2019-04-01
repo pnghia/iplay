@@ -29,14 +29,6 @@ const styles = {
       borderColor: "#ffaf50",
     },
     color: "#ffaf50"
-  },
-  label: {
-    color: "#ffaf50"
-  },
-  underline: {
-    "&:before": {
-      borderBottom: `1px solid #ffaf50`
-    }
   }
 }
 
@@ -65,12 +57,10 @@ const Input = ({options, classes, input: { input, meta }, label, ...rest }) => {
           {...input}
           {...rest}
           inputProps={{
-            classes: {underline: classes.underline},
             className: classes.input
           }}
-          InputLabelProps={{className: classes.label}}
         >
-          {options.map(({title, value}) => <MenuItem value={value}>{title}</MenuItem>)}
+          {options.map(({title, value}) => <MenuItem key={value} value={value}>{title}</MenuItem>)}
         </Select>
       </MuiThemeProvider>
       {meta.touched && meta.error && (
