@@ -18,7 +18,7 @@ import store from 'store'
 import Header from 'component/header'
 import styles from './style'
 import useLoading from '../loading/hook'
-import useDialog from '../modal/hook'
+import useDialog from '../dialog/hook'
 
 function Withdraw({ classes, history }) {
   const [loading, withLoading] = useLoading(false)
@@ -115,8 +115,8 @@ function Withdraw({ classes, history }) {
           </form>
         </div>
       <Bottom history={history} />
-      {Dialog}
-      {ErrorDialog}
+      <Dialog />
+      <ErrorDialog />
     </div>
   )
 }
