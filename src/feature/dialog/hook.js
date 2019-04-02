@@ -30,7 +30,7 @@ function ResponsiveDialog(props) {
     setOpen(opened)
   }, [options])
 
-  return [
+  return [() =>
     <div>
       <Dialog
         open={Boolean(open)}

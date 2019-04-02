@@ -14,9 +14,15 @@ import { PropagateLoader } from 'react-spinners'
 import store from 'store'
 import styles from './style'
 import useLoading from '../loading/hook'
+import useDialog from '../dialog/hook'
 
 function Login({ classes, history, callback }) {
   const [loading, withLoading] = useLoading(false)
+  const [ErrorDialog, showDialogErrorWithMessage] = useDialog({
+    title: 'Login Error',
+    btnLabel: 'Got it',
+    type: 'error'
+  })
 
   const toRegister = () => history.push('register')
 
@@ -34,7 +40,7 @@ function Login({ classes, history, callback }) {
         callback()
       }
     } catch (error) {
-      throw error
+      showDialogErrorWithMessage(error.message)
     }
   }
 
@@ -77,6 +83,7 @@ function Login({ classes, history, callback }) {
           </React.Fragment>
         )}
       </form>
+      <ErrorDialog />
     </div>
   )
 }

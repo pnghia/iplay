@@ -1,23 +1,26 @@
 export default {
   bodyContents: [
     {
-      title: 'Sports',
-      chils: []
-    },
-    {
-      title: 'Live Casino',
-      chils: []
-    },
-    {
       title: 'Slots',
       chils: [{
-        src: '/img/home/1.jpeg',
+        src: '/img/ace333.png',
         label: 'ACE333'
       },
       {
-        src: '/img/home/2.png',
+        src: '/img/918kiss.png',
         label: '918 Kiss'
       },]
+    },
+    {
+      title: 'Live Casino',
+      chils: [{
+        src: '/img/allbet.png',
+        label: 'Allbet'
+      }]
+    },
+    {
+      title: 'Sports',
+      chils: []
     },
     {
       title: 'Lottery',
