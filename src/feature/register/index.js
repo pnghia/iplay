@@ -15,9 +15,15 @@ import {
 } from '@material-ui/core'
 import styles from './style'
 import useLoading from '../loading/hook'
+import useDialog from '../dialog/hook'
 
 function Login({ classes, history }) {
   const [loading, withLoading] = useLoading(false)
+  const [ErrorDialog, showDialogErrorWithMessage] = useDialog({
+    title: 'Register Error',
+    btnLabel: 'Got it',
+    type: 'error'
+  })
   const toLogin = () => history.push('login')
   const onSubmit = async ({ email, password, fullname, phone }) => {
     try {
@@ -35,7 +41,7 @@ function Login({ classes, history }) {
       store.set('user', user)
       history.push('home')
     } catch (error) {
-      throw error
+      showDialogErrorWithMessage(error.message)
     }
   }
 
@@ -65,8 +71,8 @@ function Login({ classes, history }) {
         <TextInput input={fullname} label='Enter Your Display Name' />
         <TextInput input={phone} label='Enter Mobile No' />
         <TextInput input={email} label='Enter Your Primary Email' />
-        <TextInput input={password} label='Enter Your Password' />
-        <TextInput input={confirmPassword} label='Retype Your Password' />
+        <TextInput input={password} type="password" label='Enter Your Password' />
+        <TextInput input={confirmPassword} type="password" label='Retype Your Password' />
         {loading ? (
           <div
             style={{ display: 'flex', justifyContent: 'center', margin: 15 }}
@@ -103,6 +109,7 @@ function Login({ classes, history }) {
           </React.Fragment>
         )}
       </form>
+      <ErrorDialog/>
     </div>
   )
 }
