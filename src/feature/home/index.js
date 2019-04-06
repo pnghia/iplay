@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react/jsx-no-target-blank */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react'
@@ -42,7 +44,7 @@ function home({ history, classes }) {
         }
       </div>
       {initialData.bodyContents.map(({ chils, title }) =>
-        <div key={title} className={classes.bodyContentsRoot}>
+        <div key={title} className={classes.bodyContentsRoot} onClick={() => history.push('/download')}>
           <React.Fragment>
             <div className={classes.bodyTitle}>
               {title}

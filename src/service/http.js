@@ -2,6 +2,7 @@
 import axios from 'axios'
 import config from 'config'
 import store from 'store'
+import queryString from 'query-string'
 
 function handleErrors(response) {
   if ([200, 201].includes(response.status)) {
@@ -33,9 +34,10 @@ export default {
   },
 
   get({
-    path = ''
+    path = '',
+    params
   }) {
-    return fetch(`${config.baseUrl  }/${  path}`, {
+    return fetch(`${config.baseUrl}/${path}?${queryString.stringify(params)}`, {
       method: "GET",
       mode: "cors",
       cache: "no-cache",
@@ -43,7 +45,6 @@ export default {
       headers: this.headers,
       redirect: "follow",
       referrer: "no-referrer",
-      // body: JSON.stringify(payload), // body data type must match "Content-Type" header
     })
     .then(handleErrors)
     .then(response => response.json())
@@ -67,7 +68,7 @@ export default {
     path = '',
     payload
   }) {
-    return fetch(`${config.baseUrl  }/${  path}`, {
+    return fetch(`${config.baseUrl}/${path}`, {
       method: "POST",
       mode: "cors",
       cache: "no-cache",

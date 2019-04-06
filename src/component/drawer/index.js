@@ -29,9 +29,9 @@ const topSidebar = [
     icon: <img style={{width: 40}} src={`${process.env.PUBLIC_URL}/icon/login.png`} />
   },
   {
-    title: 'Transfer',
-    route: 'transfer',
-    icon: <img style={{width: 40}} src={`${process.env.PUBLIC_URL}/icon/icon-transfer.svg`} />
+    title: 'Histories',
+    route: 'histories',
+    icon: <img style={{width: 40}} src={`${process.env.PUBLIC_URL}/icon/icon-history.svg`} />
   },
   {
     title: 'Topup',
@@ -42,11 +42,6 @@ const topSidebar = [
     title: 'Withdraw',
     route: 'withdraw',
     icon: <img style={{width: 40}} src={`${process.env.PUBLIC_URL}/icon/icon-transfer.svg`} />
-  },
-  {
-    title: 'Profile',
-    route: 'change-password',
-    icon: <img style={{width: 40}} src={`${process.env.PUBLIC_URL}/icon/icon-profile.svg`} />
   },
   {
     title: 'Live Casino',
@@ -62,6 +57,11 @@ const topSidebar = [
     title: 'Lottery',
     route: 'change-password',
     icon: <img style={{width: 40}} src="https://www.95asia.com/v2/img/sidemenu/lottery.png" />
+  },
+  {
+    title: 'Download',
+    route: 'download',
+    icon: <img style={{width: 40}} src={`${process.env.PUBLIC_URL}/icon/icon-download.png`} />
   }
 ]
 

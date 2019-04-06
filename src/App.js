@@ -11,9 +11,12 @@ import Withdraw from 'feature/withdraw'
 import Transfer from 'feature/transfer'
 import Register from 'feature/register'
 import Account from 'feature/account'
+import Download from 'feature/download'
+import Histories from 'feature/histories'
 import http from 'service/http'
 import store from 'store'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
+import './App.css'
 
 const theme = createMuiTheme({
   typography: {
@@ -47,6 +50,8 @@ function AuthExample() {
           <PrivateRoute path="/transfer" component={Transfer} />
           <Route exact path="/" component={Home} />
           <PrivateRoute path="/account" component={Account} />
+          <PrivateRoute path="/download" component={Download} />
+          <PrivateRoute path="/histories" component={Histories} />
         </div>
       </Router>
     </MuiThemeProvider>
@@ -55,13 +60,14 @@ function AuthExample() {
 
 function PrivateRoute({ component: Component, ...rest }) {
   const token = store.get('token')
+  const userStorage = store.get('user')
   http.setJwtToken(token)
 
   return (
     <Route
       {...rest}
       render={props =>
-        token ? (
+        token && userStorage ? (
           <Component {...props} />
         ) : (
           <Redirect

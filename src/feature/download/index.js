@@ -1,24 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import {
-  AppBar,
   Card,
   CardActionArea,
   CardActions,
   CardContent,
   CardMedia,
-  Drawer,
   IconButton,
-  Toolbar,
   Typography
 } from '@material-ui/core'
 import store from 'store'
-import { GetApp, Menu, Notifications } from '@material-ui/icons'
-
+import { GetApp } from '@material-ui/icons'
+import Header from 'component/header'
 import { map } from 'ramda'
 
 import http from 'service/http'
-import Sidebar from 'component/drawer'
 import Bottom from 'component/bottom'
 import useLoading from '../loading/hook'
 import styles from './style'
@@ -27,11 +23,6 @@ function home({ history, classes }) {
   const [, withLoading] = useLoading(false)
 
   const [games, updateGames] = useState([])
-  const [drawer, toggleDrawer] = useState(false)
-
-  const onToggleDrawer = status => () => {
-    toggleDrawer(status)
-  }
 
   const fetchData = async () => {
     const { user_id: userId } = store.get('user')
@@ -48,7 +39,8 @@ function home({ history, classes }) {
       return {
         ...item,
         name: found.name,
-        game_ui_url: found.game_ui_url
+        download: found.game_ui_url,
+        gameCode: found.game_code
       }
     })
     updateGames(gamesInfo)
@@ -61,65 +53,36 @@ function home({ history, classes }) {
 
   return (
     <div className={classes.root}>
-      <Drawer open={drawer} onClose={onToggleDrawer(false)}>
-        <div
-          tabIndex={0}
-          role="button"
-          onClick={onToggleDrawer(false)}
-          onKeyDown={onToggleDrawer(false)}
-        >
-          <Sidebar history={history} />
-        </div>
-      </Drawer>
-      <AppBar>
-        <Toolbar>
-          <IconButton
-            onClick={onToggleDrawer(true)}
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="Menu"
-          >
-            <Menu />
-          </IconButton>
-          <Typography variant="title" color="inherit" className={classes.header} style={{textAlign: 'center', fontWeight: 'bold'}}>
-            Home
-          </Typography>
-          <div>
-            <IconButton color="inherit">
-              <Notifications />
-            </IconButton>
-          </div>
-        </Toolbar>
-      </AppBar>
+      <Header history={history} title='Download'/>
       <div className={classes.container}>
         {
-          map(({game_id: gameId, game_account: gameAccount, game_password: gamePassword, game_ui_url: download, name, game_sufix: gameSufix }) => (
+          map(({game_id: gameId, game_account: gameAccount, game_password: gamePassword, download, name, game_sufix: gameSufix, gameCode }) => (
             <Card className={classes.card} key={gameId}>
               <CardActionArea>
                 <CardMedia
                   component="img"
                   alt="Contemplative Reptile"
                   className={classes.media}
-                  image={`${process.env.PUBLIC_URL}/img/home/${gameId}.png`}
+                  image={`${process.env.PUBLIC_URL}/img/${gameCode}.png`}
                   title="Contemplative Reptile"
                 />
                 <CardContent style={{textAlign: 'center'}}>
-                  <Typography gutterBottom variant="h5" component="h2" style={{fontWeight: 'bold'}}>
+                  <Typography gutterBottom variant="h5" component="h2" style={{fontWeight: 'bold', color: '#ffaf50'}}>
                     {name}
                   </Typography>
                   <Typography component="p">
-                    <span style={{fontWeight: 'bold'}}>Username:</span> {gameAccount + gameSufix}
+                    <span style={{fontWeight: 'bold', color: '#ffaf50'}}>Username: {gameAccount + gameSufix}</span>
                   </Typography>
                   <Typography component="p">
-                    <span style={{fontWeight: 'bold'}}>Password:</span> {gamePassword}
+                    <span style={{fontWeight: 'bold', color: '#ffaf50'}}>Password: {gamePassword}</span>
                   </Typography>
                 </CardContent>
               </CardActionArea>
               <CardActions className={classes.actions} disableActionSpacing>
                 <IconButton aria-label="Add to favorites" style={{marginLeft: 'auto'}}>
-                  <GetApp />
+                  <GetApp style={{color: '#ffaf50'}} />
                   <Typography component="label">
-                    <a target="_blank" rel="noopener noreferrer" style={{textDecoration: 'none'}} href={download}>Click to Download Game</a>
+                    <a target="_blank" rel="noopener noreferrer" style={{textDecoration: 'none', color: '#ffaf50'}} href={download}>Click to Download Game</a>
                   </Typography>
                 </IconButton>
               </CardActions>

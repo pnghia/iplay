@@ -22,7 +22,9 @@ const styles = () => ({
     flexGrow: 1,
   },
   card: {
-    marginBottom: 25
+    marginBottom: 25,
+    background: 'none',
+    border: '1px solid #ffaf50'
   }
 })
 

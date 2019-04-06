@@ -23,6 +23,10 @@
   color: #61dafb;
 }
 
+.table-wrapper {
+  overflow-x: auto
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
