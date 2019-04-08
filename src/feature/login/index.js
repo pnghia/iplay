@@ -24,8 +24,6 @@ function Login({ classes, history, callback }) {
     type: 'error'
   })
 
-  const toRegister = () => history.push('register')
-
   const onSubmit = async payload => {
     try {
       const { id_token: token, user } = await withLoading(() =>
@@ -76,7 +74,7 @@ function Login({ classes, history, callback }) {
             <Button type="submit" fullWidth variant="contained" color="primary" disabled={submitting} className={classes.submit} >
               Sign in
             </Button>
-            <Button onClick={toRegister} fullWidth variant="contained" color="primary" disabled={submitting} className={classes.submit}
+            <Button onClick={() => history.push('register')} fullWidth variant="contained" color="primary" disabled={submitting} className={classes.submit}
             >
               Register
             </Button>

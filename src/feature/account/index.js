@@ -13,7 +13,7 @@ function Account({ history }) {
   const [user, updateUser] = useState({})
 
   const fetchAccount = async () => {
-    const userResp = await http.get({ path: 'users/me'})
+    const userResp = await http.get({ path: 'me'})
     store.set('user', userResp)
     updateUser(userResp)
   }

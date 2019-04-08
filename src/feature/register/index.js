@@ -25,12 +25,13 @@ function Login({ classes, history }) {
     type: 'error'
   })
   const toLogin = () => history.push('login')
-  const onSubmit = async ({ email, password, fullname, phone }) => {
+  const onSubmit = async ({ email, password, fullname, phone, agent = '' }) => {
     try {
       const payload = {
         email, password, fullname,
         mobile_phone: phone,
-        user_account_no: phone
+        user_account_no: phone,
+        parent_id: agent === '' ? undefined : agent
       }
       const { id_token: token, user } = await withLoading(() =>
         http.post({ path: 'users', payload })
@@ -46,15 +47,12 @@ function Login({ classes, history }) {
   }
 
   const schema = Joi.object().keys({
-    fullname: Joi.string()
-      .required(),
-    phone: Joi.number()
-      .required(),
-    email: Joi.string().email({ minDomainAtoms: 2 }),
-    password: Joi.string()
-      .regex(/^[a-zA-Z0-9]{3,30}$/)
-      .required(),
-    confirmPassword: Joi.string().valid(Joi.ref('password')).required()
+    fullname: Joi.string().required(),
+    phone: Joi.string().required(),
+    email: Joi.string().email({ minDomainAtoms: 2 }).required(),
+    password: Joi.string().regex(/^[a-zA-Z0-9]{3,30}$/).required(),
+    confirmPassword: Joi.string().valid(Joi.ref('password')).required(),
+    agent: Joi.string().email({ minDomainAtoms: 2 })
   })
 
   const { form, handleSubmit, submitting } = useForm({
@@ -62,7 +60,7 @@ function Login({ classes, history }) {
     validate: validate(schema)
   })
 
-  const [phone, password, fullname, email, confirmPassword] = formCreateInputs(['phone', 'password', 'fullname', 'email', 'confirmPassword'], form)
+  const [phone, password, fullname, email, confirmPassword, agent] = formCreateInputs(['phone', 'password', 'fullname', 'email', 'confirmPassword', 'agent'], form)
   return (
     <div className={classes.main}>
       <CssBaseline />
@@ -71,6 +69,7 @@ function Login({ classes, history }) {
         <TextInput input={fullname} label='Enter Your Display Name' />
         <TextInput input={phone} label='Enter Mobile No' />
         <TextInput input={email} label='Enter Your Primary Email' />
+        <TextInput input={agent} label='Enter Your Agent email (optional)' />
         <TextInput input={password} type="password" label='Enter Your Password' />
         <TextInput input={confirmPassword} type="password" label='Retype Your Password' />
         {loading ? (
